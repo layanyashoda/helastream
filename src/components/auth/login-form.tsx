@@ -9,7 +9,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -28,6 +28,7 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"div">) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -78,13 +79,27 @@ export function LoginForm({
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password" className="text-gray-300">Password</Label>
-                            <Input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="bg-[#23252b] border-[#34363e] text-white focus:ring-[#FF0000] focus:border-[#FF0000]"
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    required
+                                    className="bg-[#23252b] border-[#34363e] text-white focus:ring-[#FF0000] focus:border-[#FF0000] pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-4 w-4" />
+                                    ) : (
+                                        <Eye className="h-4 w-4" />
+                                    )}
+                                    <span className="sr-only">Toggle password visibility</span>
+                                </button>
+                            </div>
                             <div className="flex items-center">
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>

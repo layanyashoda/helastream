@@ -12,6 +12,11 @@ export default auth((req) => {
     const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
     const isAdminRoute = nextUrl.pathname.startsWith("/admin");
     const isAuthRoute = nextUrl.pathname.includes("/login") || nextUrl.pathname.includes("/register"); // Simple check
+    const isRootRoute = nextUrl.pathname === "/";
+
+    if (isRootRoute && isLoggedIn) {
+        return NextResponse.redirect(new URL("/discover", nextUrl));
+    }
 
     if (isApiAuthRoute) {
         return; // Don't block auth api routes

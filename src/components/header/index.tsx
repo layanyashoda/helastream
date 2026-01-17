@@ -48,95 +48,111 @@ const Header = ({ user }: HeaderProps) => {
                     </Link>
                 </div>
 
-                <div title="Menu" className="header-menu">
-                    <HeaderMenu
-                        headerState={headerState}
-                        setHeaderState={setHeaderState}
-                    />
-                </div>
+                {user ? (
+                    <>
+                        <div title="Menu" className="header-menu">
+                            <HeaderMenu
+                                headerState={headerState}
+                                setHeaderState={setHeaderState}
+                            />
+                        </div>
 
-                <div className="header-actions">
-                    <ul className="flex items-center">
-                        <li>
-                            <Link href="/search" title="Search">
-                                <button className="icon-wrapper">
-                                    <HiSearch className="size-6" />
-                                </button>
-                            </Link>
-                        </li>
-
-                        <li>
-                            <button title="Watchlist" className="icon-wrapper">
-                                <HiOutlineBookmark className="size-6" />
-                            </button>
-                        </li>
-
-                        <li>
-                            {user ? (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <button title="Account Menu" className="icon-wrapper">
-                                            <HiOutlineUser className="size-6" />
+                        <div className="header-actions">
+                            <ul className="flex items-center">
+                                <li>
+                                    <Link href="/search" title="Search">
+                                        <button className="icon-wrapper">
+                                            <HiSearch className="size-6" />
                                         </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="bg-[#23252b] border-[#141519] text-white w-72 p-0 overflow-hidden shadow-xl rounded-md mt-2">
-                                        <div className="p-4 bg-[#141519]">
-                                            <div className="flex items-center gap-3">
-                                                <div className="bg-[var(--app-background-crunchyroll-orange)] h-10 w-10 rounded-full flex items-center justify-center text-lg font-bold text-white uppercase">
-                                                    {user.name?.[0] || "U"}
-                                                </div>
-                                                <div className="flex flex-col overflow-hidden">
-                                                    <p className="text-base font-semibold truncate leading-tight">{user.name}</p>
-                                                    <p className="text-xs text-gray-400 truncate mt-0.5">Premium Member</p>
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <button title="Watchlist" className="icon-wrapper">
+                                        <HiOutlineBookmark className="size-6" />
+                                    </button>
+                                </li>
+
+                                <li>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <button title="Account Menu" className="icon-wrapper">
+                                                <HiOutlineUser className="size-6" />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="bg-[#23252b] border-[#141519] text-white w-72 p-0 overflow-hidden shadow-xl rounded-md mt-2">
+                                            <div className="p-4 bg-[#141519]">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="bg-[var(--app-background-crunchyroll-orange)] h-10 w-10 rounded-full flex items-center justify-center text-lg font-bold text-white uppercase">
+                                                        {user.name?.[0] || "U"}
+                                                    </div>
+                                                    <div className="flex flex-col overflow-hidden">
+                                                        <p className="text-base font-semibold truncate leading-tight">{user.name}</p>
+                                                        <p className="text-xs text-gray-400 truncate mt-0.5">Premium Member</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="p-2 space-y-1">
-                                            <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                <Link href="/watchlist" className="flex items-center gap-3 w-full">
-                                                    <HiOutlineBookmark className="size-5 text-gray-400" />
-                                                    <span className="text-sm font-medium">Watchlist</span>
-                                                </Link>
-                                            </DropdownMenuItem>
-
-                                            <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                <Link href="/history" className="flex items-center gap-3 w-full">
-                                                    <HiOutlineClock className="size-5 text-gray-400" />
-                                                    <span className="text-sm font-medium">History</span>
-                                                </Link>
-                                            </DropdownMenuItem>
-
-                                            <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                <Link href="/settings" className="flex items-center gap-3 w-full">
-                                                    <HiOutlineCog className="size-5 text-gray-400" />
-                                                    <span className="text-sm font-medium">Settings</span>
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        </div>
-
-                                        <DropdownMenuSeparator className="bg-[#141519] m-0" />
-
-                                        <div className="p-2 space-y-1">
-                                            {user.role === "admin" && (
+                                            <div className="p-2 space-y-1">
                                                 <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                    <Link href="/admin" className="flex items-center gap-3 w-full">
-                                                        <LayoutDashboard className="size-5 text-[var(--app-background-crunchyroll-orange)]" />
-                                                        <span className="text-sm font-medium text-[var(--app-background-crunchyroll-orange)]">Admin Console</span>
+                                                    <Link href="/watchlist" className="flex items-center gap-3 w-full">
+                                                        <HiOutlineBookmark className="size-5 text-gray-400" />
+                                                        <span className="text-sm font-medium">Watchlist</span>
                                                     </Link>
                                                 </DropdownMenuItem>
-                                            )}
 
-                                            <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                <Link href="/api/auth/signout" className="flex items-center gap-3 w-full">
-                                                    <LogOut className="size-5 text-gray-400" />
-                                                    <span className="text-sm font-medium">Log Out</span>
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        </div>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            ) : (
+                                                <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
+                                                    <Link href="/history" className="flex items-center gap-3 w-full">
+                                                        <HiOutlineClock className="size-5 text-gray-400" />
+                                                        <span className="text-sm font-medium">History</span>
+                                                    </Link>
+                                                </DropdownMenuItem>
+
+                                                <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
+                                                    <Link href="/settings" className="flex items-center gap-3 w-full">
+                                                        <HiOutlineCog className="size-5 text-gray-400" />
+                                                        <span className="text-sm font-medium">Settings</span>
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            </div>
+
+                                            <DropdownMenuSeparator className="bg-[#141519] m-0" />
+
+                                            <div className="p-2 space-y-1">
+                                                {user.role === "admin" && (
+                                                    <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
+                                                        <Link href="/admin" className="flex items-center gap-3 w-full">
+                                                            <LayoutDashboard className="size-5 text-[var(--app-background-crunchyroll-orange)]" />
+                                                            <span className="text-sm font-medium text-[var(--app-background-crunchyroll-orange)]">Admin Console</span>
+                                                        </Link>
+                                                    </DropdownMenuItem>
+                                                )}
+
+                                                <DropdownMenuItem
+                                                    className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3"
+                                                    onSelect={(e) => {
+                                                        e.preventDefault();
+                                                        import("next-auth/react").then(({ signOut }) => {
+                                                            signOut({ callbackUrl: "/" });
+                                                        });
+                                                    }}
+                                                >
+                                                    <div className="flex items-center gap-3 w-full">
+                                                        <LogOut className="size-5 text-gray-400" />
+                                                        <span className="text-sm font-medium">Log Out</span>
+                                                    </div>
+                                                </DropdownMenuItem>
+                                            </div>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        </div>
+                    </>
+                ) : (
+                    <div className="header-actions">
+                        <ul className="flex items-center">
+                            <li>
                                 <div className="flex items-center gap-3">
                                     <Link href="/login" title="Login">
                                         <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white hover:text-gray-300 transition-colors uppercase tracking-wider h-10">
@@ -144,15 +160,15 @@ const Header = ({ user }: HeaderProps) => {
                                         </button>
                                     </Link>
                                     <Link href="/register" title="Sign Up">
-                                        <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-[#141519] bg-[#fab818] hover:bg-[#ffc636] transition-colors uppercase tracking-wider h-10 clip-path-polygon">
+                                        <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-[var(--app-background-crunchyroll-orange)] hover:bg-[#ff3333] transition-colors uppercase tracking-wider h-10 clip-path-polygon">
                                             Sign Up
                                         </button>
                                     </Link>
                                 </div>
-                            )}
-                        </li>
-                    </ul>
-                </div>
+                            </li>
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <div
