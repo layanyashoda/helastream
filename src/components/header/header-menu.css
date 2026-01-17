@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@import "../../assets/styles/theme.css";
+@import "../../assets/styles/utilities.css";
+
+.menu-dropdown {
+    @apply invisible fixed top-15 left-0 grid h-[calc(100%-3.75rem)] w-full -translate-y-2.5 overflow-y-auto bg-[var(--app-overlay-secondary)] opacity-0 sm:w-[18.75rem] lg:absolute lg:top-full lg:left-0 lg:h-auto lg:w-auto lg:py-2.5;
+
+    grid-template-areas: "content";
+    scrollbar-width: thin;
+    transition:
+        transform 0.1s,
+        opacity 0.1s cubic-bezier(0, 0, 0.25, 1),
+        visibility 0s linear 0.1s;
+}
+
+.menu-dropdown[data-active="true"] {
+    @apply visible translate-y-0 opacity-100;
+
+    transition:
+        transform 0.2s,
+        opacity 0.2s cubic-bezier(0, 0, 0.25, 1),
+        visibility 0s;
+}
+
+.menu-dropdown-content {
+    @apply block w-full lg:grid lg:grid-cols-[13.75rem_1fr];
+
+    grid-area: content;
+}
+
+.small-title {
+    @apply block px-5 py-2.5 text-xs font-semibold text-[var(--meta-color)] uppercase select-none lg:hidden;
+}
+
+.menu-section {
+    @apply py-2.5 lg:py-0;
+}
+
+.menu-section .genres-section {
+    @apply grid w-full grid-flow-col gap-x-5;
+    grid-template-rows: repeat(5, 1fr);
+    grid-auto-columns: minmax(0, 12.5rem);
+}
+
+.menu-title {
+    @apply app-transition-colors relative flex items-center px-4.5 py-3 text-base font-medium text-[var(--app-text-secondary)] hover:bg-[var(--app-background-secondary)] data-[active=true]:bg-[var(--app-background-secondary)] lg:px-4 lg:text-sm/4.5;
+}
+
+.menu-title-icon {
+    @apply absolute top-1/2 left-[calc(100vw-13%)] -translate-y-1/2 sm:left-[15.75rem];
+
+    transition: transform 0.1s cubic-bezier(0, 0, 0.25, 1);
+}
+
+.menu-title[data-active="true"] .menu-title-icon {
+    @apply -rotate-180;
+}
+
+.submenu-title {
+    @apply app-transition-colors block p-[0.875rem_2.375rem] text-sm/4.5 font-medium text-[var(--app-icon-primary)] hover:bg-[var(--app-background-secondary)] lg:p-[0.75rem_1rem] lg:hover:bg-[var(--app-background-secondary)];
+}
+
+.submenu-title-active {
+    @apply border-l-2 border-[var(--app-background-crunchyroll-orange)] pl-9 text-[var(--app-text-crunchyroll-orange)];
+}

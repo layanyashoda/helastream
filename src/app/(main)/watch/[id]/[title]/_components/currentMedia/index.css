@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "../../../../../../../assets/styles/theme.css";
+@import "../../../../../../../assets/styles/utilities.css";
+
+
+
+.show-title-link:hover,
+.show-title-link:focus-visible {
+    @apply text-white underline;
+}
+
+.show-title-link::after {
+    @apply mx-2 hidden h-[84%] w-[0.0625rem] bg-[#4a4e58] content-[""] sm:block;
+}
+
+.current-media-action-button {
+    @apply cursor-pointer;
+}
+
+
+.current-media-action-button svg {
+    @apply hidden size-6 fill-current;
+}
+
+.current-media-action-button svg:first-child {
+    @apply block;
+}
+
+.current-media-action-button:hover svg:first-child,
+.current-media-action-button:focus-visible svg:first-child,
+.group:hover .current-media-action-button svg:first-child {
+    @apply hidden;
+}
+
+.current-media-action-button:hover svg:nth-child(2),
+.current-media-action-button:focus-visible svg:nth-child(2),
+.group:hover .current-media-action-button svg:nth-child(2) {
+    @apply block;
+}

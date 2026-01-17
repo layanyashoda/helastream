@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "../../assets/styles/theme.css";
+@import "../../assets/styles/utilities.css";
+
+.action-button {
+    @apply app-transition-colors h-10 cursor-pointer items-center justify-center select-none;
+}
+
+.action-button-shadow {
+    @apply shadow-[inset_0_0_0_0.125rem_currentColor];
+}
+
+.action-button-child {
+    @apply flex h-full items-center justify-center gap-1 text-sm/4.5 font-black uppercase;
+}

@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "../../../assets/styles/theme.css";
+@import "../../../assets/styles/utilities.css";
+
+.star-rating-average-button:hover,
+.star-rating-average-button:focus-visible {
+    @apply underline;
+}
+
+.star-rating-average-button span {
+    @apply flex-[0_0_auto] text-sm/4.5;
+}
+
+.star-rating-average-button:focus+.star-rating-average-data {
+    @apply absolute z-[98] block;
+    top: calc(100% + 0.5rem);
+}
+
+@keyframes starRatingAverageTooltipAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.star-rating-average-tooltip {
+    @apply w-[18.125rem] bg-[var(--app-background-secondary)] p-5;
+
+    animation: starRatingAverageTooltipAnimation 0.15s ease forwards;
+}

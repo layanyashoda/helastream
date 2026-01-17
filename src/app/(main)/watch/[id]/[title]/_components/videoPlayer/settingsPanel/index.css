@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@import "../../../../../../../../assets/styles/theme.css";
+@import "../../../../../../../../assets/styles/utilities.css";
+
+.settings-setting-container,
+.subtitles-setting-container,
+.audio-setting-container,
+.quality-level-setting-container {
+    @apply flex h-12 w-full items-center px-5;
+}
+
+.setting-button {
+    @apply hover:bg-[var(--app-background-secondary)] focus-visible:bg-[var(--app-background-secondary)];
+}
+
+.selected-setting-title {
+    @apply block max-w-38.5 truncate text-xs text-[#808080];
+}

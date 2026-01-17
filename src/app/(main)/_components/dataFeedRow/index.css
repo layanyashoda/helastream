@@ -1,0 +1,239 @@
+@import "tailwindcss";
+@import "../../../../assets/styles/theme.css";
+@import "../../../../assets/styles/utilities.css";
+
+.wide-cards-carousel-layout {
+    --wide-cards-carousel-cols: 2;
+    --wide-cards-carousel-rows: 1;
+
+    --carousel-col-gap: 0.625rem;
+    --carousel-row-gap: 0.75rem;
+
+    --carousel-overflow-y-hint: 0.5rem;
+    --carousel-overflow-x-hint: var(--container-inline-padding);
+
+    --scroll-step: var(--wide-cards-carousel-cols);
+
+    @apply relative grid;
+
+    grid-template-areas:
+        "content"
+        "pages";
+}
+
+@media screen and (min-width: 480px) {
+    .wide-cards-carousel-layout {
+        --wide-cards-carousel-cols: 3;
+    }
+}
+
+@media screen and (min-width: 568px) {
+    .wide-cards-carousel-layout {
+        --wide-cards-carousel-cols: 4;
+
+        --carousel-col-gap: 1.25rem;
+
+        --carousel-overflow-y-hint: 0.75rem;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .wide-cards-carousel-layout {
+        --wide-cards-carousel-cols: 5;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .wide-cards-carousel-layout {
+        --carousel-col-gap: 1.875rem;
+    }
+}
+
+@media screen and (min-width: 1720px) {
+    .wide-cards-carousel-layout {
+        --wide-cards-carousel-cols: 6;
+    }
+}
+
+.wide-cards-carousel-container {
+    @apply grid w-full;
+    grid-template-columns: minmax(0, auto);
+
+    grid-area: content;
+    grid-template-areas: "viewbox";
+}
+
+.wide-card-carousel-arrow-wrapper {
+    --arrow-wrapper-height: calc(100% - 60px);
+    --icon-height: clamp(var(--arrow-wrapper-height),
+            calc((var(--wide-cards-carousel-rows) - 1) * 500vh),
+            100%);
+
+    @apply absolute inset-0 grid h-full;
+
+    grid-area: viewbox;
+}
+
+.wide-card-carousel-arrow {
+    --arrow-width: max(var(--carousel-overflow-x-hint), 1.5rem);
+
+    @apply ease-quick relative z-2 hidden h-full w-[var(--arrow-width)] cursor-pointer self-center p-0.5 text-[var(--app-text-secondary)] transition-colors sm:flex;
+}
+
+.wide-cards-carousel-container:hover .wide-card-carousel-arrow {
+    @apply flex;
+}
+
+.arrow-dir-to-left {
+    --gradient-dir: to left;
+
+    @apply justify-self-start;
+}
+
+.arrow-dir-to-right {
+    --gradient-dir: to right;
+
+    @apply justify-self-end;
+}
+
+.wide-card-carousel-arrow::before {
+    @apply ease-quick absolute inset-0 -z-[1] block transition-opacity content-[""] sm:opacity-0;
+
+    background: linear-gradient(var(--gradient-dir),
+            #0000,
+            #00000080 calc(var(--arrow-width) / 2),
+            #000000b3);
+}
+
+.wide-card-carousel-arrow svg {
+    --arrow-size: 1.25rem;
+
+    @apply mx-auto;
+
+    height: var(--icon-height);
+    width: var(--arrow-size);
+}
+
+@media screen and (min-width: 568px) {
+    .wide-card-carousel-arrow svg {
+        --arrow-size: 2.5rem;
+    }
+}
+
+.wide-cards-carousel-frame {
+    grid-area: viewbox;
+}
+
+.carousel-scroller {
+    @apply relative z-[1] overflow-hidden;
+
+    margin: calc(var(--carousel-overflow-y-hint) * -1) calc(var(--carousel-overflow-x-hint) * -1);
+}
+
+.carousel-scroller-wrapper {
+    padding: var(--carousel-overflow-y-hint) var(--carousel-overflow-x-hint);
+
+    @apply box-initial;
+}
+
+.carousel-scroller-track {
+    @apply grid snap-x snap-mandatory grid-flow-col overflow-auto;
+
+    --padding-y: max(0rem,
+            calc(var(--carousel-overflow-y-hint) - var(--carousel-row-gap) / 2));
+    --padding-x: max(0rem,
+            calc(var(--carousel-overflow-x-hint) - var(--carousel-col-gap) / 2));
+
+    grid-template-rows: repeat(var(--wide-cards-carousel-rows), auto);
+    grid-auto-columns: calc(100% / var(--wide-cards-carousel-cols));
+
+    margin: calc((var(--carousel-row-gap) / 2 + var(--padding-y)) * -1) calc((var(--carousel-col-gap) / 2 + var(--padding-x)) * -1);
+    padding: var(--padding-y) var(--padding-x);
+
+    scroll-padding: 0 var(--padding-x);
+    overscroll-behavior-x: none;
+    scrollbar-width: none;
+}
+
+.carousel-scroller-track::-webkit-scrollbar {
+    @apply hidden;
+}
+
+.carousel-scroller-card {
+    @apply app-transition-opacity snap-start;
+
+    padding: calc(var(--carousel-row-gap) / 2) calc(var(--carousel-col-gap) / 2);
+}
+
+.carousel-scroller-card[inert] {
+    @apply opacity-50;
+}
+
+.browse-card {
+    @apply relative;
+}
+
+.browse-card-poster {
+    @apply relative aspect-[3/4.5];
+}
+
+.browse-card-body {
+    @apply pt-3;
+}
+
+.browse-card-body-title {
+    @apply line-clamp-3 text-sm/4.5 font-medium;
+}
+
+.browse-card-hover {
+    @apply ease-quick absolute inset-0 flex opacity-0 transition-opacity;
+}
+
+.browse-card-hover:hover,
+.browse-card-hover:focus-within {
+    @apply z-[2] opacity-100;
+}
+
+.browse-card-hover-content {
+    @apply relative flex flex-[0_0_100%] flex-col bg-[var(--app-overlay-secondary)] shadow-[0_0_0_0.5rem_var(--app-overlay-secondary)];
+}
+
+.browse-card-hover-poster-wrapper {
+    @apply absolute -inset-2 opacity-5;
+}
+
+.browse-card-hover-link {
+    @apply absolute inset-0 z-[2];
+}
+
+.browse-card-hover-body {
+    @apply relative flex-1 p-1;
+}
+
+.browse-card-hover-body-description {
+    --max-lines: 7;
+
+    @apply line-clamp-[var(--max-lines)] text-sm/4.5 break-words;
+
+    max-height: calc(var(--max-lines) * 1.125rem);
+}
+
+@media screen and (min-width: 568px) {
+    .browse-card-hover-body-description {
+        --max-lines: 5;
+    }
+}
+
+@media screen and (min-width: 980px) {
+    .browse-card-hover-body-description {
+        --max-lines: 6;
+    }
+}
+
+.browse-card-hover-footer {
+    @apply relative z-2 flex gap-1.5 self-start;
+}
+
+.browse-card-hover-footer-button {
+    @apply flex size-8 cursor-pointer items-center justify-center text-[var(--app-background-crunchyroll-orange)];
+}

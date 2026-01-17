@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "../../../../../../../assets/styles/theme.css";
+@import "../../../../../../../assets/styles/utilities.css";
+
+
+
+.prev-next-episode {
+    @apply relative;
+}
+
+.prev-next-episode .title {
+    @apply mb-3 block font-black uppercase;
+}

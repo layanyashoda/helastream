@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "../../assets/styles/theme.css";
+@import "../../assets/styles/utilities.css";
+
+.playable-card-mini {
+    --hover-shadow-size: 0.375rem;
+
+    box-shadow: 0 0 0 var(--hover-shadow-size) #0000;
+}
+
+.playable-card-mini:hover,
+.playable-card-mini:focus-within {
+    @apply bg-[var(--app-overlay-secondary)];
+
+    box-shadow: 0 0 0 var(--hover-shadow-size) var(--app-overlay-secondary);
+}
+
+.playable-card-mini-thumbnail-wrapper::after {
+    @apply app-transition-opacity absolute inset-0 bg-white opacity-0 content-[""];
+}
+
+.playable-card-mini:hover .playable-card-mini-thumbnail-wrapper::after,
+.playable-card-mini:focus-within .playable-card-mini-thumbnail-wrapper::after {
+    opacity: 0.08;
+}

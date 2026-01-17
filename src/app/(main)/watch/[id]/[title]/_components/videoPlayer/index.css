@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "../../../../../../../assets/styles/theme.css";
+@import "../../../../../../../assets/styles/utilities.css";
+
+.video-player {
+    grid-template-areas: "video-player";
+}
+
+.video-player>* {
+    grid-area: video-player;
+}
+
+.video-player-sizer,
+.settings-panel-sizer {
+    @apply h-[56.25vw] max-h-40;
+    min-height: calc(20rem * 0.5625);
+}
+
+.settings-panel-sizer {
+    @apply md:h-full md:max-h-75.5 md:w-80;
+}
+
+@media screen and (min-height: 25rem) {
+
+    .video-player-sizer,
+    .settings-panel-sizer {
+        max-height: calc(100vh - 15.625rem);
+    }
+}

@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "../../../../assets/styles/theme.css";
+@import "../../../../assets/styles/utilities.css";
+
+.carousel-navigation-arrow {
+    --pill-color: #ffffff80;
+
+    @apply pointer-events-none absolute top-0 hidden h-full w-[var(--container-inline-padding)] items-center md:flex;
+}
+
+.carousel-navigation-arrow button {
+    @apply app-transition-colors grid h-[6.25rem] w-full cursor-pointer hover:text-[var(--pill-color)] focus-visible:text-[var(--pill-color)];
+
+    pointer-events: all;
+}
+
+.carousel-navigation-arrow button svg {
+    --stroke: #4a4e5866;
+
+    @apply m-auto size-[22px] max-w-full stroke-[var(--stroke)] lg:size-[26px] 2xl:size-[28px];
+
+    stroke: var(--stroke);
+    stroke-width: 0.0313rem;
+}
+
+.carousel-cards {
+    @apply relative -z-1 grid;
+
+    grid-template-areas: "content";
+}
+
+.carousel-card {
+    @apply app-transition-opacity pointer-events-none relative z-0 opacity-0 duration-500;
+
+    grid-area: content;
+}
+
+.carousel-card[aria-current="true"] {
+    @apply pointer-events-auto z-[1] opacity-100;
+}
+
+.carousel-card-container {
+    @apply grid w-full min-w-full items-stretch;
+    grid-template-columns: minmax(0, auto);
+    grid-template-rows: minmax(0, auto);
+
+    grid-template-areas: "carousel-card";
+}
+
+.carousel-card-grid {
+    @apply relative grid max-h-full w-full grid-cols-12 gap-x-2.5 px-[var(--container-inline-padding)] pt-[60%] md:gap-x-5 md:pt-10 lg:gap-x-[1.875rem] 2xl:pt-20;
+    grid-template-rows: 1fr auto;
+
+    align-content: end;
+    align-items: end;
+    grid-area: carousel-card;
+}
+
+.carousel-card-sizer {
+    --under-hero-whitespace: 18.75rem;
+
+    @apply 3xl:min-h-[43.75rem] aspect-[1/1.15] w-full md:aspect-[20/7] md:max-h-[calc(100vh-var(--under-hero-whitespace))] md:max-h-[var(--under-hero-whitespace)] lg:min-h-[22.5rem] xl:min-h-[31.25rem] 2xl:min-h-[37.5rem];
+
+    align-self: end;
+    grid-area: carousel-card;
+}
+
+@media screen and (min-width: 1440px) {
+    .carousel-card-sizer {
+        --under-hero-whitespace: min(21.875rem, 40vh);
+    }
+}
+
+.carousel-card-bg {
+    @apply pointer-events-none absolute top-0 left-0 -z-[1] aspect-[auto_2/3] w-full min-w-full md:aspect-[auto_16/9];
+}
+
+.carousel-card-bg::before,
+.carousel-card-bg::after {
+    @apply pointer-events-none absolute inset-0 block aspect-[inherit] bg-[var(--app-background-secondary)] content-[""];
+}
+
+.carousel-card-bg::after {
+    background: linear-gradient(180deg, #0000 40%, #000000bf 65%, #000 90%);
+}
+
+@media screen and (min-width: 800px) {
+    .carousel-card-bg::after {
+        background:
+            linear-gradient(to bottom, #0000 50%, #000 100%),
+            linear-gradient(to right, #000000d9 0, #00000080 30%, #0000 55%);
+    }
+}
+
+.carousel-card-title {
+    @apply absolute grid aspect-[15/8] w-full max-w-[37.5rem];
+    grid-column: 4 / span 6;
+    grid-row: 1 / 1;
+
+    @media (min-width: 800px) {
+        /* md */
+        grid-column: 1 / span 4;
+    }
+
+    @media (min-width: 1024px) {
+        /* lg */
+        grid-column: 1 / span 3;
+    }
+
+    max-height: min(20rem, 100%);
+
+    grid-template-areas: "logo";
+}
+
+.carousel-card-logo {
+    grid-area: logo;
+}
+
+.carousel-card-logo img {
+    @apply block object-contain object-[bottom_center] opacity-0 md:object-[bottom_left];
+
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.carousel-card[aria-current="true"] .carousel-card-logo img {
+    @apply opacity-100;
+}
+
+.carousel-card-seo-title {
+    @apply pointer-events-none absolute size-0 overflow-hidden;
+}
+
+.carousel-card-body {
+    @apply grid h-full grid-cols-1 justify-stretch text-center sm:justify-items-center md:justify-items-start;
+    grid-column: 1 / span 12;
+
+    @media (min-width: 568px) {
+        /* sm */
+        grid-column: 3 / span 8;
+    }
+
+    @media (min-width: 800px) {
+        /* md */
+        grid-column: 1 / span 5;
+    }
+
+    @media (min-width: 1024px) {
+        /* lg */
+        grid-column: 1 / span 4;
+    }
+
+    align-content: end;
+    grid-row: 2;
+}
+
+@media screen and (min-width: 800px) {
+    .carousel-card-body {
+        text-align: unset;
+    }
+}
+
+.carousel-card-description {
+    @apply mb-8 hidden text-base font-medium text-[var(--app-icon-primary)] lg:line-clamp-4;
+}
+
+.navigatin-button {
+    --pill-color: #ffffff80;
+
+    @apply ease-quick relative h-2 w-6 cursor-pointer px-1 py-2 transition-[width] duration-300;
+
+    box-sizing: initial;
+}
+
+.navigatin-button:first-child {
+    @apply md:pl-0;
+}
+
+.navigatin-button[aria-current="true"] {
+    @apply w-12;
+}
+
+.navigatin-button[aria-current="true"]:hover {
+    --pill-color: var(--app-background-crunchyroll-orange);
+}
+
+.navigatin-button:hover,
+.navigatin-button:focus-visible {
+    --pill-color: #ff640ab3;
+}
+
+.navigatin-button[aria-current="true"] span {
+    @apply h-full rounded-sm bg-[var(--app-background-crunchyroll-orange)];
+
+    animation: onCardLoad 10s linear;
+}
+
+@keyframes onCardLoad {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
