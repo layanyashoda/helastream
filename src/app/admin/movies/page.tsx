@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import Link from "next/link";
+import { MovieActions } from "../_components/movie-actions";
 
 export const dynamic = 'force-dynamic';
 
@@ -119,9 +120,11 @@ export default async function MoviesPage() {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="bg-[#141519] border-[#23252b] text-white">
                                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                            <DropdownMenuItem className="hover:bg-[#23252b] cursor-pointer">Edit Movie</DropdownMenuItem>
+                                            <DropdownMenuItem asChild className="hover:bg-[#23252b] cursor-pointer">
+                                                <Link href={`/admin/movies/edit/${movie.id}`}>Edit Movie</Link>
+                                            </DropdownMenuItem>
                                             <DropdownMenuSeparator className="bg-[#23252b]" />
-                                            <DropdownMenuItem className="text-red-500 hover:bg-[#23252b] cursor-pointer">Delete</DropdownMenuItem>
+                                            <MovieActions movieId={movie.id} />
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

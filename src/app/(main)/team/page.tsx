@@ -1,114 +1,206 @@
+"use client";
 
-import { Metadata } from 'next';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
 import { FaLinkedin, FaTwitter, FaGithub } from 'react-icons/fa';
+import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { GradualBlur } from "@/components/ui/gradual-blur";
+import { TiltCard } from "@/components/ui/tilt-card";
 
-export const metadata: Metadata = {
-    title: 'Our Team - HelaStream',
-    description: 'Meet the passionate team behind HelaStream.',
-};
+gsap.registerPlugin(ScrollTrigger);
 
 const TEAM_MEMBERS = [
     {
-        name: "Alex Sterling",
-        role: "Founder & CEO",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex", // Placeholder Avatar
-        bio: "Visionary leader with a passion for bringing global entertainment to local audiences.",
-        social: { linkedin: "#", twitter: "#" }
-    },
-    {
-        name: "Sarah Chen",
-        role: "Chief Technology Officer",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-        bio: "Tech veteran ensuring our streaming infrastructure is world-class and buffer-free.",
-        social: { linkedin: "#", github: "#" }
-    },
-    {
-        name: "Marcus Johnson",
+        name: "Chanuka Isuru",
+        number: "06",
         role: "Head of Content",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
-        bio: "Curating the best library of movies and shows for our diverse community.",
+        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2670&auto=format&fit=crop",
         social: { linkedin: "#", twitter: "#" }
     },
     {
-        name: "Emily Davis",
+        name: "Chamika Lakshan",
+        number: "29",
         role: "Lead Designer",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
-        bio: "Crafting intuitive and beautiful user experiences across all platforms.",
+        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
         social: { linkedin: "#", twitter: "#" }
     },
     {
-        name: "David Silva",
+        name: "Nethmi Pahasarani",
+        number: "73",
         role: "Community Manager",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
-        bio: "Building bridges between fans and the content they love through engagement.",
+        image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2574&auto=format&fit=crop",
         social: { linkedin: "#", twitter: "#" }
+    },
+    {
+        name: "Sanduni Bodhika",
+        number: "74",
+        role: "Head of Marketing",
+        image: "https://images.unsplash.com/photo-1598550874175-4d7112ee7519?q=80&w=2525&auto=format&fit=crop",
+        social: { linkedin: "#", twitter: "#" }
+    },
+    {
+        name: "Layan Yasoda",
+        number: "81",
+        role: "Lead Developer",
+        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2574&auto=format&fit=crop",
+        social: { github: "#", linkedin: "#" }
     }
 ];
 
 export default function TeamPage() {
-    return (
-        <div className="bg-[#141519] text-white min-h-screen pt-24 pb-20">
-            <div className="container mx-auto px-6 max-w-6xl">
+    const containerRef = useRef(null);
 
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                        Meet the <span className="text-[var(--app-background-crunchyroll-orange)]">Team</span>
+    useGSAP(() => {
+        // Hero Parallax
+        gsap.to(".hero-bg-img", {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Team Grid Animation - Staggered Reveal
+        const cards = gsap.utils.toArray(".team-card-container");
+        cards.forEach((card: any, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 90%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                delay: i * 0.1 // Simple staggered delay based on index
+            });
+        });
+
+    }, { scope: containerRef });
+
+    return (
+        <div ref={containerRef} className="bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden selection:bg-red-500/30">
+
+            {/* 1. Cinematic Hero */}
+            <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 z-0 hero-bg-img should-animate">
+                    <img
+                        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop"
+                        alt="Office Background"
+                        className="w-full h-full object-cover opacity-20 scale-110 grayscale"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/90 via-[#0a0a0a]/60 to-[#0a0a0a]"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0a0a0a_100%)]"></div>
+                </div>
+
+                <div className="relative z-10 text-center container px-6 mt-10">
+                    <div className="inline-block mb-4 overflow-hidden">
+                        <span className="text-[#FF0000] font-mono text-sm tracking-[0.2em] uppercase">The Visionaries</span>
+                    </div>
+                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6 relative">
+                        <GradualBlur text="MEET THE SQUAD" className="justify-center" />
                     </h1>
-                    <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                        The passionate individuals working behind the scenes to bring you the ultimate entertainment experience.
+                    <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+                        The minds crafting the next generation of entertainment.
                     </p>
                 </div>
+            </section>
 
-                {/* Team Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 justify-items-center">
-                    {TEAM_MEMBERS.map((member, index) => (
-                        <div
-                            key={index}
-                            className={`bg-[#23252b] rounded-lg overflow-hidden border border-gray-800 hover:border-[var(--app-background-crunchyroll-orange)] transition-all duration-300 w-full max-w-sm group lg:col-span-2 ${index === 3 ? 'lg:col-start-2' : ''}`}
-                        >
-                            {/* Image Container */}
-                            <div className="h-64 bg-gray-800 relative overflow-hidden flex items-center justify-center bg-gradient-to-b from-gray-700 to-[#23252b]">
-                                <img
-                                    src={member.image}
-                                    alt={member.name}
-                                    className="size-48 rounded-full border-4 border-[#141519] shadow-lg group-hover:scale-105 transition-transform duration-300 bg-[#141519]"
-                                />
-                            </div>
+            {/* 2. The Team Grid (Immersive Cards) */}
+            <section className="pb-32 bg-[#0a0a0a] team-section relative">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#23252b] to-transparent"></div>
 
-                            {/* Content */}
-                            <div className="p-6 text-center">
-                                <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-                                <p className="text-[var(--app-background-crunchyroll-orange)] font-medium mb-4">{member.role}</p>
-                                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                                    {member.bio}
-                                </p>
+                <div className="container mx-auto px-6 max-w-7xl">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+                        {TEAM_MEMBERS.map((member, idx) => (
+                            <TiltCard
+                                key={idx}
+                                className={`team-card-container group ${idx === 4
+                                    ? 'md:col-span-2 lg:col-span-6 lg:col-start-4'
+                                    : 'lg:col-span-6'
+                                    }`}
+                                sensitivity={10}
+                            >
+                                <div className="relative h-[450px] w-full rounded-[2rem] overflow-hidden transition-all duration-700 ease-out group-hover:shadow-[0_0_50px_-12px_rgba(255,0,0,0.25)] border border-white/5 group-hover:border-white/10 bg-[#141519] translate-z-0">
 
-                                {/* Social Links */}
-                                <div className="flex justify-center gap-4">
-                                    {member.social.linkedin && (
-                                        <a href={member.social.linkedin} className="text-gray-500 hover:text-white transition-colors">
-                                            <FaLinkedin size={20} />
-                                        </a>
-                                    )}
-                                    {member.social.twitter && (
-                                        <a href={member.social.twitter} className="text-gray-500 hover:text-white transition-colors">
-                                            <FaTwitter size={20} />
-                                        </a>
-                                    )}
-                                    {/* @ts-ignore */}
-                                    {member.social.github && (
-                                        <a href={member.social.github} className="text-gray-500 hover:text-white transition-colors">
-                                            <FaGithub size={20} />
-                                        </a>
-                                    )}
+                                    {/* Image with overlay */}
+                                    <div className="absolute inset-0 w-full h-full">
+                                        <img
+                                            src={member.image}
+                                            alt={member.name}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter grayscale-[0.3] group-hover:grayscale-0"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-90"></div>
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                                    </div>
+
+                                    {/* Content - Bottom Aligned */}
+                                    <div className="absolute bottom-0 left-0 w-full p-8 md:p-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 translate-z-10">
+                                        <div className="flex justify-between items-end mb-4 border-b border-white/10 pb-4">
+                                            <div>
+                                                <div className="text-[#FF0000] font-mono text-xs tracking-widest mb-2 uppercase">
+                                                    {member.role}
+                                                </div>
+                                                <h3 className="text-3xl font-bold text-white leading-none whitespace-pre-wrap">
+                                                    {member.name.split(" ").map((n, i) => (
+                                                        <span key={i} className="block">{n}</span>
+                                                    ))}
+                                                </h3>
+                                            </div>
+                                            <span className="text-7xl font-black text-white/5 absolute top-8 right-8 group-hover:text-white/10 transition-colors duration-500 select-none transform translate-z-20">
+                                                {member.number}
+                                            </span>
+                                        </div>
+
+                                        {/* Social Links - Reveal on Hover */}
+                                        <div className="flex items-center gap-6 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                                            <span className="text-sm text-gray-400 font-medium">Connect:</span>
+                                            <div className="flex gap-4">
+                                                {member.social.linkedin && (
+                                                    <a href={member.social.linkedin} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaLinkedin size={18} /></a>
+                                                )}
+                                                {member.social.twitter && (
+                                                    <a href={member.social.twitter} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaTwitter size={18} /></a>
+                                                )}
+                                                {/* @ts-ignore */}
+                                                {member.social.github && (
+                                                    <a href={member.social.github} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaGithub size={18} /></a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                            </TiltCard>
+                        ))}
+                    </div>
                 </div>
+            </section>
 
-            </div>
+            {/* 3. Join Us CTA (Minimal & Bold) */}
+            <section className="py-32 bg-[#0a0a0a] border-t border-white/5 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1a1c22_0%,transparent_70%)] opacity-50"></div>
+                <div className="container mx-auto px-6 relative z-10">
+                    <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter">
+                        SHAPE THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF0000] to-orange-600">UNSEEN</span>
+                    </h2>
+                    <p className="text-gray-400 text-xl mb-12 max-w-2xl mx-auto font-light">
+                        We are looking for the outliers, the obsession-driven, and the dreamers.
+                    </p>
+                    <Link href="#">
+                        <Button className="bg-[#FF0000] text-white hover:bg-[#cc0000] font-bold text-lg px-12 h-16 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_-5px_rgba(255,0,0,0.4)]">
+                            See Open Positions
+                        </Button>
+                    </Link>
+                </div>
+            </section>
+
         </div>
     );
 }

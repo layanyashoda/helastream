@@ -21,6 +21,22 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+
+const formSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(1, "Password is required"),
+})
 
 export function LoginForm({
     className,
@@ -31,18 +47,21 @@ export function LoginForm({
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
-    async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault()
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    })
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true)
         setError("")
 
-        const formData = new FormData(event.currentTarget)
-        const email = formData.get("email") as string
-        const password = formData.get("password") as string
-
         const result = await signIn("credentials", {
-            email,
-            password,
+            email: values.email,
+            password: values.password,
             redirect: false,
         })
 
@@ -64,74 +83,88 @@ export function LoginForm({
                         Enter your email below to login
                     </p>
                 </div>
-                <form onSubmit={onSubmit}>
-                    <div className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="email" className="text-gray-300">Email</Label>
-                            <Input
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="m@example.com"
-                                required
-                                className="bg-[#23252b] border-[#34363e] text-white placeholder:text-gray-500 focus:ring-[#FF0000] focus:border-[#FF0000]"
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="password" className="text-gray-300">Password</Label>
-                            <div className="relative">
-                                <Input
-                                    id="password"
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    required
-                                    className="bg-[#23252b] border-[#34363e] text-white focus:ring-[#FF0000] focus:border-[#FF0000] pr-10"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                                >
-                                    {showPassword ? (
-                                        <EyeOff className="h-4 w-4" />
-                                    ) : (
-                                        <Eye className="h-4 w-4" />
-                                    )}
-                                    <span className="sr-only">Toggle password visibility</span>
-                                </button>
-                            </div>
-                            <div className="flex items-center">
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <button
-                                            type="button"
-                                            className="ml-auto text-sm underline-offset-4 hover:underline text-gray-400 hover:text-white"
-                                        >
-                                            Forgot your password?
-                                        </button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Reset Password</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                If you have forgotten your password, please contact support or check your email for reset instructions.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction>OK</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>
-                        </div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-gray-300">Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="m@example.com"
+                                            className="bg-[#23252b] border-[#34363e] text-white placeholder:text-gray-500 focus:ring-[#FF0000] focus:border-[#FF0000]"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-gray-300">Password</FormLabel>
+                                    <FormControl>
+                                        <div className="relative">
+                                            <Input
+                                                type={showPassword ? "text" : "password"}
+                                                className="bg-[#23252b] border-[#34363e] text-white focus:ring-[#FF0000] focus:border-[#FF0000] pr-10"
+                                                {...field}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                                <span className="sr-only">Toggle password visibility</span>
+                                            </button>
+                                        </div>
+                                    </FormControl>
+                                    <div className="flex items-center pt-2">
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <button
+                                                    type="button"
+                                                    className="ml-auto text-sm underline-offset-4 hover:underline text-gray-400 hover:text-white"
+                                                >
+                                                    Forgot your password?
+                                                </button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Reset Password</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        If you have forgotten your password, please contact support or check your email for reset instructions.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction>OK</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
                         <Button type="submit" className="w-full bg-[#FF0000] hover:bg-[#D40000] text-white font-bold" disabled={isLoading}>
                             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                             Login
                         </Button>
-                    </div>
-                </form>
+                    </form>
+                </Form>
                 <div className="text-center text-sm text-gray-400">
                     <div className="mb-2">
                         Don&apos;t have an account?{" "}

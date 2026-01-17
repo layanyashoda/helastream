@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,13 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, UploadCloud } from "lucide-react";
+import { Loader2, UploadCloud, ArrowLeft } from "lucide-react";
 import { Movie } from "@/types";
 
-export default function AddMoviePage() {
+export default function EditMoviePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
 
     const [isFeatured, setIsFeatured] = useState(false);
@@ -27,6 +28,14 @@ export default function AddMoviePage() {
         description: "",
         year: new Date().getFullYear(),
         genre: "",
+    });
+
+    // Existing URLs to show previews or keep if not updated
+    const [existingUrls, setExistingUrls] = useState({
+        videoUrl: "",
+        posterUrl: "",
+        titleImageUrl: "",
+        bannerImageUrl: ""
     });
 
     const [files, setFiles] = useState<{
@@ -40,6 +49,44 @@ export default function AddMoviePage() {
         titleImage: null,
         bannerImage: null
     });
+
+    useEffect(() => {
+        const fetchMovie = async () => {
+            try {
+                const docRef = doc(db, "videos", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as Movie;
+                    setFormData({
+                        title: data.title || "",
+                        description: data.description || "",
+                        year: data.year || new Date().getFullYear(),
+                        genre: data.genre || "",
+                    });
+                    setIsFeatured(data.isFeatured || false);
+                    setExistingUrls({
+                        videoUrl: data.videoUrl || "",
+                        posterUrl: data.posterUrl || "",
+                        titleImageUrl: data.titleImageUrl || "",
+                        bannerImageUrl: data.bannerImageUrl || ""
+                    });
+                } else {
+                    alert("Movie not found");
+                    router.push("/admin/movies");
+                }
+            } catch (error) {
+                console.error("Error fetching movie:", error);
+                alert("Error fetching movie details");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchMovie();
+        }
+    }, [id, router]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: keyof typeof files) => {
         if (e.target.files && e.target.files[0]) {
@@ -57,7 +104,6 @@ export default function AddMoviePage() {
                 (snapshot) => {
                     const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     console.log(`Upload is ${p}% done`);
-                    // We could aggregate progress here if we wanted strictly accurate total progress
                 },
                 (error) => reject(error),
                 async () => {
@@ -71,83 +117,101 @@ export default function AddMoviePage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!files.video || !files.poster) {
-            alert("Video and Poster are required!");
+        // Validation: If no existing poster and no new poster, error
+        if (!existingUrls.posterUrl && !files.poster) {
+            alert("Poster is required!");
             return;
         }
 
-        if (isFeatured && (!files.titleImage || !files.bannerImage)) {
-            alert("Featured movies require Title Image and Banner Image!");
+        if (isFeatured && !existingUrls.titleImageUrl && !files.titleImage) {
+            alert("Featured movies require Title Image!");
+            return;
+        }
+        if (isFeatured && !existingUrls.bannerImageUrl && !files.bannerImage) {
+            alert("Featured movies require Banner Image!");
             return;
         }
 
-        setIsLoading(true);
+        setIsSaving(true);
         setStatusMessage("Initializing...");
 
         try {
-            // 1. Generate the Movie ID first so we can use it in the folder path
-            const docRef = doc(collection(db, "videos"));
-            const movieId = docRef.id;
-
-            // Upload Video to 'videos/{movieId}/...'
-            setStatusMessage("Uploading video file...");
-            // This will result in: videos/{movieId}/{timestamp}_{filename}
-            // Which matches the Cloud Function expectation: videos/{movieId}/{filename}
-            const videoUrl = await uploadFile(files.video, `videos/${movieId}`);
-
-            // Upload Poster
-            setStatusMessage("Uploading poster...");
-            const posterUrl = await uploadFile(files.poster, "images");
-
-            // Upload Featured Assets
-            let titleImageUrl = "";
-            let bannerImageUrl = "";
-
-            if (isFeatured) {
-                setStatusMessage("Uploading featured assets...");
-                titleImageUrl = await uploadFile(files.titleImage!, "images");
-                bannerImageUrl = await uploadFile(files.bannerImage!, "images");
-            }
-
-            // Save Metadata
-            setStatusMessage("Saving movie details...");
-            const movieData: Omit<Movie, "id"> = {
+            const updates: Partial<Movie> = {
                 title: formData.title,
                 description: formData.description,
                 year: Number(formData.year),
                 genre: formData.genre,
-                status: "Ready", // Set default status to Ready since we don't have a transcoding backend yet
-                videoUrl, // This will be the RAW mp4 url initially. Cloud function will update it to HLS later.
-                thumbnailUrl: posterUrl, // Fallback to poster
-                posterUrl,
                 isFeatured,
-                titleImageUrl: isFeatured ? titleImageUrl : undefined,
-                bannerImageUrl: isFeatured ? bannerImageUrl : undefined,
-                filename: files.video.name,
-                size: files.video.size,
-                uploadDate: new Date().toISOString()
             };
 
-            // Use setDoc with the generated reference
-            await setDoc(docRef, movieData);
+            // 1. Upload Video if changed
+            if (files.video) {
+                setStatusMessage("Uploading new video file...");
+                const videoUrl = await uploadFile(files.video, `videos/${id}`);
+                updates.videoUrl = videoUrl;
+                updates.filename = files.video.name;
+                updates.size = files.video.size;
+                // Optionally reset status to Processing if re-uploading triggers transcoding
+                updates.status = "Ready";
+            }
+
+            // 2. Upload Poster if changed
+            if (files.poster) {
+                setStatusMessage("Uploading new poster...");
+                const posterUrl = await uploadFile(files.poster, "images");
+                updates.posterUrl = posterUrl;
+                // If no specific thumbnail logic, maybe update thumbnail too? 
+                // Currently keeping it simple, assuming thumbnail = poster for fallback
+                if (!updates.thumbnailUrl) updates.thumbnailUrl = posterUrl;
+            }
+
+            // 3. Upload Featured Assets if changed
+            if (files.titleImage) {
+                setStatusMessage("Uploading title image...");
+                const titleImageUrl = await uploadFile(files.titleImage, "images");
+                updates.titleImageUrl = titleImageUrl;
+            }
+            if (files.bannerImage) {
+                setStatusMessage("Uploading banner image...");
+                const bannerImageUrl = await uploadFile(files.bannerImage, "images");
+                updates.bannerImageUrl = bannerImageUrl;
+            }
+
+            // 4. Update Firestore
+            setStatusMessage("Updating movie details...");
+            const docRef = doc(db, "videos", id);
+            await updateDoc(docRef, updates);
 
             setStatusMessage("Done!");
             router.push("/admin/movies");
             router.refresh();
 
         } catch (error) {
-            console.error("Upload failed", error);
-            setStatusMessage("Error uploading movie.");
+            console.error("Update failed", error);
+            setStatusMessage("Error updating movie.");
         } finally {
-            setIsLoading(false);
+            setIsSaving(false);
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex h-[50vh] items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-4xl mx-auto space-y-8">
-            <div>
-                <h1 className="text-2xl font-bold">Add New Movie</h1>
-                <p className="text-muted-foreground">Upload a new movie and define its metadata.</p>
+            <div className="flex items-center gap-4">
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                    <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                    <h1 className="text-2xl font-bold">Edit Movie</h1>
+                    <p className="text-muted-foreground">Update movie details and assets.</p>
+                </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -161,7 +225,6 @@ export default function AddMoviePage() {
                             <Label htmlFor="title">Title</Label>
                             <Input
                                 id="title"
-                                placeholder="Movie Title"
                                 value={formData.title}
                                 onChange={e => setFormData({ ...formData, title: e.target.value })}
                                 required
@@ -172,7 +235,6 @@ export default function AddMoviePage() {
                             <Label htmlFor="description">Description</Label>
                             <Textarea
                                 id="description"
-                                placeholder="Movie Plot Summary..."
                                 value={formData.description}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 className="h-32"
@@ -192,7 +254,7 @@ export default function AddMoviePage() {
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="genre">Genre</Label>
-                                <Select onValueChange={(v) => setFormData({ ...formData, genre: v })}>
+                                <Select value={formData.genre} onValueChange={(v) => setFormData({ ...formData, genre: v })}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select Genre" />
                                     </SelectTrigger>
@@ -214,11 +276,14 @@ export default function AddMoviePage() {
                 <Card className="bg-[#141519] border-[#23252b]">
                     <CardHeader>
                         <CardTitle>Media Assets</CardTitle>
-                        <CardDescription>Upload video file and posters.</CardDescription>
+                        <CardDescription>Update video file and posters. Leave empty to keep existing.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="video">Video File (MP4)</Label>
+                            {existingUrls.videoUrl && (
+                                <p className="text-sm text-green-500 mb-2">✓ Current Video Exists</p>
+                            )}
                             <div className="border-2 border-dashed border-[#23252b] rounded-lg p-6 hover:bg-[#23252b]/50 transition-colors cursor-pointer relative">
                                 <Input
                                     id="video"
@@ -226,25 +291,28 @@ export default function AddMoviePage() {
                                     accept="video/mp4,video/webm"
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     onChange={e => handleFileChange(e, "video")}
-                                    required
                                 />
                                 <div className="text-center">
                                     <UploadCloud className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
                                     <p className="text-sm text-muted-foreground">
-                                        {files.video ? files.video.name : "Click to upload video file"}
+                                        {files.video ? files.video.name : "Click to replace video file"}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="poster">Poster Image (Portrait)</Label>
+                            <Label htmlFor="poster">Poster Image</Label>
+                            {existingUrls.posterUrl && (
+                                <div className="mb-2">
+                                    <img src={existingUrls.posterUrl} alt="Current Poster" className="h-32 object-cover rounded" />
+                                </div>
+                            )}
                             <Input
                                 id="poster"
                                 type="file"
                                 accept="image/*"
                                 onChange={e => handleFileChange(e, "poster")}
-                                required
                             />
                         </div>
                     </CardContent>
@@ -264,23 +332,31 @@ export default function AddMoviePage() {
                     {isFeatured && (
                         <CardContent className="space-y-4 pt-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="titleImage">Title Image (Logo/Text Transparent)</Label>
+                                <Label htmlFor="titleImage">Title Image</Label>
+                                {existingUrls.titleImageUrl && (
+                                    <div className="mb-2 bg-black/50 p-2 rounded w-fit">
+                                        <img src={existingUrls.titleImageUrl} alt="Current Title" className="h-10 object-contain" />
+                                    </div>
+                                )}
                                 <Input
                                     id="titleImage"
                                     type="file"
                                     accept="image/*"
                                     onChange={e => handleFileChange(e, "titleImage")}
-                                    required
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="bannerImage">Banner Image (Landscape Background)</Label>
+                                <Label htmlFor="bannerImage">Banner Image</Label>
+                                {existingUrls.bannerImageUrl && (
+                                    <div className="mb-2">
+                                        <img src={existingUrls.bannerImageUrl} alt="Current Banner" className="h-20 w-full object-cover rounded" />
+                                    </div>
+                                )}
                                 <Input
                                     id="bannerImage"
                                     type="file"
                                     accept="image/*"
                                     onChange={e => handleFileChange(e, "bannerImage")}
-                                    required
                                 />
                             </div>
                         </CardContent>
@@ -291,9 +367,9 @@ export default function AddMoviePage() {
                     <Button type="button" variant="ghost" onClick={() => router.back()}>
                         Cancel
                     </Button>
-                    <Button type="submit" disabled={isLoading} className="bg-[#ff640a] hover:bg-[#e05200] text-white">
-                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isLoading ? statusMessage : "Create Movie"}
+                    <Button type="submit" disabled={isSaving} className="bg-[#ff640a] hover:bg-[#e05200] text-white">
+                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isSaving ? statusMessage : "Save Changes"}
                     </Button>
                 </div>
             </form>

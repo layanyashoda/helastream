@@ -24,6 +24,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface HeaderProps {
     user?: User;
@@ -119,14 +121,7 @@ const Header = ({ user }: HeaderProps) => {
                                             <DropdownMenuSeparator className="bg-[#141519] m-0" />
 
                                             <div className="p-2 space-y-1">
-                                                {user.role === "admin" && (
-                                                    <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                        <Link href="/admin" className="flex items-center gap-3 w-full">
-                                                            <LayoutDashboard className="size-5 text-[var(--app-background-crunchyroll-orange)]" />
-                                                            <span className="text-sm font-medium text-[var(--app-background-crunchyroll-orange)]">Admin Console</span>
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                )}
+
 
                                                 <DropdownMenuItem
                                                     className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3"

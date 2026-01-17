@@ -1,15 +1,8 @@
 
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import Preloader from "@/components/ui/preloader"
 import "./globals.css";
-
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"],
-  variable: "--font-lato",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "HelaTV+",
@@ -23,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={lato.className}>
+      <body className={GeistSans.className}>
         <Preloader />
         <div className="flex flex-col min-h-screen">
           {children}
