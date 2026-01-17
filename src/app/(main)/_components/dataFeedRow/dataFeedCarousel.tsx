@@ -13,6 +13,7 @@ import {
     HiMiniChevronRight,
 } from "react-icons/hi2";
 import { AddToWatchListOutlined } from "@/assets/addToWatchListIcons";
+import { WatchlistButton } from "@/components/watchlist-button";
 
 import { DataFeedItem } from "./index.types";
 
@@ -216,9 +217,9 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                                                                 />
                                                             </Link>
 
-                                                            <button className="outline-xs browse-card-hover-footer-button">
-                                                                <AddToWatchListOutlined className="size-6 fill-current" />
-                                                            </button>
+                                                            <div className="browse-card-hover-footer-button flex justify-center items-center">
+                                                                <WatchlistButton movieId={dataFeedItem.id} variant="icon" className="text-white hover:text-[#ff640a]" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -48,7 +48,7 @@ export default function CategoryPage() {
     return (
         <main className="min-h-screen pt-24 pb-10 px-4 md:px-8 max-w-[1400px] mx-auto">
             <div className="mb-8 border-l-4 border-[var(--app-background-crunchyroll-orange)] pl-4">
-                <h1 className="text-3xl font-bold text-white capitalize">{genre} Anime</h1>
+                <h1 className="text-3xl font-bold text-white capitalize">{genre} Movies</h1>
                 <p className="text-gray-400 mt-1">Explore our collection of {genre} series and movies.</p>
             </div>
 

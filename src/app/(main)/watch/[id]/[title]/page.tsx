@@ -33,7 +33,7 @@ export default async function Watch({ params }: Readonly<PageProps>) {
     return (
         <>
             <main>
-                <VideoPlayerProvider media={episode.media}>
+                <VideoPlayerProvider media={episode.media} movieId={id}>
                     <VideoPlayer duration={episode.duration} />
                 </VideoPlayerProvider>
 

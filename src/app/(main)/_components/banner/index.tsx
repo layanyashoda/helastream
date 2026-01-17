@@ -139,6 +139,7 @@ const Banner: React.FC<{ bannerItems: BannerItem[] }> = ({ bannerItems }) => {
                                             tabIndex={tabIndex}
                                             watchActionhref={episodeLink}
                                             watchActionText="Start Watching"
+                                            movieId={bannerItem.id}
                                         />
                                     </div>
                                 </div>

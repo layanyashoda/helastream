@@ -21,6 +21,22 @@ export default function EditMoviePage({ params }: { params: Promise<{ id: string
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
+    const [genres, setGenres] = useState<{ id: string, name: string }[]>([]);
+
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const res = await fetch("/api/genres");
+                if (res.ok) {
+                    const data = await res.json();
+                    setGenres(data);
+                }
+            } catch (e) {
+                console.error("Failed to load genres", e);
+            }
+        };
+        fetchGenres();
+    }, []);
 
     const [isFeatured, setIsFeatured] = useState(false);
     const [formData, setFormData] = useState({
@@ -259,13 +275,13 @@ export default function EditMoviePage({ params }: { params: Promise<{ id: string
                                         <SelectValue placeholder="Select Genre" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Action">Action</SelectItem>
-                                        <SelectItem value="Comedy">Comedy</SelectItem>
-                                        <SelectItem value="Drama">Drama</SelectItem>
-                                        <SelectItem value="Horror">Horror</SelectItem>
-                                        <SelectItem value="Sci-Fi">Sci-Fi</SelectItem>
-                                        <SelectItem value="Romance">Romance</SelectItem>
-                                        <SelectItem value="Animation">Animation</SelectItem>
+                                        {genres.length > 0 ? (
+                                            genres.map((g) => (
+                                                <SelectItem key={g.id} value={g.name}>{g.name}</SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem value="disabled" disabled>Loading genres...</SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>

@@ -11,7 +11,7 @@ import HeaderMenu from "./headerMenu";
 
 import { HeaderState } from "./types";
 
-import { HiSearch, HiOutlineUser, HiOutlineBookmark, HiOutlineLogin, HiOutlineClock, HiOutlineCog } from "react-icons/hi";
+import { HiSearch, HiOutlineUser, HiOutlineBookmark, HiOutlineLogin, HiOutlineClock } from "react-icons/hi";
 import { LogOut, LayoutDashboard } from "lucide-react";
 
 import { HeaderLogoMobileOnly, HeaderLogoLarge } from "@/assets/headerLogo";
@@ -70,9 +70,11 @@ const Header = ({ user }: HeaderProps) => {
                                 </li>
 
                                 <li>
-                                    <button title="Watchlist" className="icon-wrapper">
-                                        <HiOutlineBookmark className="size-6" />
-                                    </button>
+                                    <Link href="/watchlist" title="Watchlist">
+                                        <button className="icon-wrapper">
+                                            <HiOutlineBookmark className="size-6" />
+                                        </button>
+                                    </Link>
                                 </li>
 
                                 <li>
@@ -110,12 +112,7 @@ const Header = ({ user }: HeaderProps) => {
                                                     </Link>
                                                 </DropdownMenuItem>
 
-                                                <DropdownMenuItem asChild className="focus:bg-[#34363e] focus:text-white cursor-pointer rounded-sm py-2.5 px-3">
-                                                    <Link href="/settings" className="flex items-center gap-3 w-full">
-                                                        <HiOutlineCog className="size-5 text-gray-400" />
-                                                        <span className="text-sm font-medium">Settings</span>
-                                                    </Link>
-                                                </DropdownMenuItem>
+
                                             </div>
 
                                             <DropdownMenuSeparator className="bg-[#141519] m-0" />

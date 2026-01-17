@@ -67,7 +67,7 @@ export default async function UsersPage() {
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <UserActions userId={user.id} currentStatus={user.status || "active"} />
+                                    <UserActions userId={user.id} currentStatus={user.status || "active"} currentRole={user.role} />
                                 </TableCell>
                             </TableRow>
                         ))}

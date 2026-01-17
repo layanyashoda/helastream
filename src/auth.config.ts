@@ -11,10 +11,11 @@ export const authConfig = {
             return token
         },
         session({ session, token }) {
-            if (session.user) {
-                (session.user as any).role = token.role
+            if (session.user && token.sub) {
+                session.user.id = token.sub;
+                (session.user as any).role = token.role;
             }
-            return session
+            return session;
         },
     },
 } satisfies NextAuthConfig

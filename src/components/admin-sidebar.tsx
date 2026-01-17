@@ -6,9 +6,9 @@ import {
     Video,
     Users,
     Settings,
-    LifeBuoy,
-    Send,
     Clapperboard,
+    LogOut,
+    ChevronsUpDown,
 } from "lucide-react"
 
 import {
@@ -27,6 +27,14 @@ import {
     SidebarGroupLabel,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { useSession, signOut } from "next-auth/react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const navMain = [
     {
@@ -38,7 +46,7 @@ const navMain = [
     {
         title: "Movies",
         url: "#",
-        icon: Video, // Keeping Video icon or switching to Clapperboard is fine, but let's stick to the structure
+        icon: Video,
         isActive: true,
         items: [
             {
@@ -49,6 +57,14 @@ const navMain = [
                 title: "Add Movie",
                 url: "/admin/movies/add",
             },
+            {
+                title: "Featured Content",
+                url: "/admin/featured",
+            },
+            {
+                title: "Genres",
+                url: "/admin/genres",
+            },
         ],
     },
     {
@@ -56,22 +72,19 @@ const navMain = [
         url: "/admin/users",
         icon: Users,
     },
+    {
+        title: "Settings",
+        url: "/admin/settings",
+        icon: Settings,
+    },
 ]
 
-const navSecondary = [
-    {
-        title: "Support",
-        url: "#",
-        icon: LifeBuoy,
-    },
-    {
-        title: "Feedback",
-        url: "#",
-        icon: Send,
-    },
-]
+import { usePathname } from "next/navigation"
 
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { data: session } = useSession()
+    const pathname = usePathname()
+
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader>
@@ -96,45 +109,34 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                     <SidebarGroupLabel>Platform</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {navMain.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                                        <Link href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                    {item.items?.length ? (
-                                        <SidebarMenuSub>
-                                            {item.items.map((subItem) => (
-                                                <SidebarMenuSubItem key={subItem.title}>
-                                                    <SidebarMenuSubButton asChild>
-                                                        <Link href={subItem.url}>
-                                                            <span>{subItem.title}</span>
-                                                        </Link>
-                                                    </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                            ))}
-                                        </SidebarMenuSub>
-                                    ) : null}
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup className="mt-auto">
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {navSecondary.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild size="sm">
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {navMain.map((item) => {
+                                // Check if main item is active (exact match or parent of sub-item)
+                                const isMainActive = item.url === pathname || (item.items && item.items.some(sub => sub.url === pathname));
+
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild tooltip={item.title} isActive={isMainActive}>
+                                            <Link href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                        {item.items?.length ? (
+                                            <SidebarMenuSub>
+                                                {item.items.map((subItem) => (
+                                                    <SidebarMenuSubItem key={subItem.title}>
+                                                        <SidebarMenuSubButton asChild isActive={subItem.url === pathname}>
+                                                            <Link href={subItem.url}>
+                                                                <span>{subItem.title}</span>
+                                                            </Link>
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                ))}
+                                            </SidebarMenuSub>
+                                        ) : null}
+                                    </SidebarMenuItem>
+                                )
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -142,17 +144,35 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/api/auth/signout">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-accent text-sidebar-primary-foreground">
-                                    <span className="text-xs font-bold">AD</span>
-                                </div>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">Admin User</span>
-                                    <span className="truncate text-xs">admin@helastream.com</span>
-                                </div>
-                            </Link>
-                        </SidebarMenuButton>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton
+                                    size="lg"
+                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                >
+                                    <Avatar className="h-8 w-8 rounded-lg">
+                                        <AvatarImage src={session?.user?.image || ''} alt={session?.user?.name || ''} />
+                                        <AvatarFallback className="rounded-lg">{session?.user?.name?.[0] || 'U'}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="grid flex-1 text-left text-sm leading-tight">
+                                        <span className="truncate font-semibold">{session?.user?.name || 'User'}</span>
+                                        <span className="truncate text-xs">{session?.user?.email || 'user@helastream.com'}</span>
+                                    </div>
+                                    <ChevronsUpDown className="ml-auto size-4" />
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                side="bottom"
+                                align="end"
+                                sideOffset={4}
+                            >
+                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} className="cursor-pointer">
+                                    <LogOut className="mr-2 size-4" />
+                                    Log out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarFooter>

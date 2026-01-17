@@ -13,6 +13,19 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+// Import images
+import ALevel from "@/assets/dataFeed/alevel.jpg";
+import Dharmayuddhaya from "@/assets/dataFeed/dharmayuddhaya.jpg";
+import Gajaman from "@/assets/dataFeed/gajaman.jpg";
+import Giniavi from "@/assets/dataFeed/giniavi.jpg";
+import Goal from "@/assets/dataFeed/goal.jpg";
+import Heena from "@/assets/dataFeed/heena.jpg";
+import Mandara from "@/assets/dataFeed/mandara.jpg";
+import Modatharindu from "@/assets/dataFeed/modatharindu.jpg";
+import Rankevita from "@/assets/dataFeed/rankevita.jpg";
+import Thaala from "@/assets/dataFeed/thaala.jpg";
+import Image from "next/image";
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function LandingPage() {
@@ -51,10 +64,6 @@ export default function LandingPage() {
       ease: "none"
     });
 
-    // Value Props Scroll Reveal
-    // Value Props Scroll Reveal - REMOVED for visibility debugging
-    // gsap.from(".value-prop-card", { ... });
-
     // Bento Grid Scroll Reveal
     gsap.from(".bento-item", {
       scrollTrigger: {
@@ -70,6 +79,7 @@ export default function LandingPage() {
     });
 
     // Infinite Marquee
+    // Simple clone for loop effect if not enough items, but with 10 images doubled it might be enough
     if (marqueeRef.current) {
       const marqueeContent = marqueeRef.current;
       const width = marqueeContent.scrollWidth;
@@ -79,13 +89,17 @@ export default function LandingPage() {
 
       gsap.to(marqueeContent, {
         x: -width / 2,
-        duration: 20,
+        duration: 40, // Slower for better visibility
         ease: "none",
         repeat: -1
       });
     }
 
   }, { scope: containerRef });
+
+  const trendingImages = [
+    ALevel, Dharmayuddhaya, Gajaman, Giniavi, Goal, Heena, Mandara, Modatharindu, Rankevita, Thaala
+  ];
 
   return (
     <div ref={containerRef} className="bg-[#141519] min-h-screen text-white overflow-x-hidden">
@@ -135,11 +149,9 @@ export default function LandingPage() {
             {/* 1. Top Wide Item - Header Visual */}
             <div className="bento-item md:col-span-4 relative group overflow-hidden rounded-[2rem] border border-[#23252b] hover:border-[#FF0000]/30 transition-all duration-500 bg-black">
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
-              <img
-                src="https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&w=2670&auto=format&fit=crop"
-                alt="Cinematic Experience"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60"
-              />
+
+              {/* Removed Image */}
+              <div className="absolute inset-0 bg-[#0a0a0a] opacity-60"></div>
 
               {/* Hover Glow */}
               <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-[#FF0000] rounded-full blur-[100px] opacity-0 group-hover:opacity-20 transition-opacity duration-700"></div>
@@ -172,11 +184,8 @@ export default function LandingPage() {
 
             {/* 3. Visual Item - Originals */}
             <div className="bento-item md:col-span-1 relative group overflow-hidden rounded-[2rem] bg-[#1a1c22] border border-[#23252b] min-h-[400px] flex items-center justify-center">
-              <img
-                src="https://images.unsplash.com/photo-1620553630927-b68d3aa05391?q=80&w=2574&auto=format&fit=crop"
-                alt="Originals"
-                className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110"
-              />
+              {/* Removed Image */}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 
               {/* Hover Glow */}
@@ -216,12 +225,15 @@ export default function LandingPage() {
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#141519] to-transparent z-10 pointer-events-none"></div>
 
           <div ref={marqueeRef} className="inline-flex gap-6 pl-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="inline-block w-48 h-72 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shrink-0 transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-[#333] hover:border-[#FF0000]">
-                {/* Placeholder Content */}
-                <div className="h-full flex items-center justify-center opacity-30">
-                  <span className="text-4xl font-black text-gray-700">#{i}</span>
-                </div>
+            {trendingImages.map((src, i) => (
+              <div key={i} className="inline-block w-48 h-72 rounded-lg shrink-0 transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-[#333] hover:border-[#FF0000] overflow-hidden relative">
+                <Image
+                  src={src}
+                  alt={`Trending ${i}`}
+                  fill
+                  className='object-cover'
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </div>
             ))}
           </div>

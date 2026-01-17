@@ -24,6 +24,7 @@ export type Movie = {
 
     // Featured Content
     isFeatured?: boolean;
+    featuredOrder?: number;
     titleImageUrl?: string; // For hero overlay
     bannerImageUrl?: string; // For hero background
 

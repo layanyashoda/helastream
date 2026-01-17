@@ -11,6 +11,9 @@ import {
     useContext,
 } from "react";
 import HLS from "hls.js";
+import { useSession } from "next-auth/react";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 import { Context, MediaSettingsPanel } from "./index.types";
 
@@ -27,7 +30,8 @@ export function useVideoPlayer() {
 export function VideoPlayerProvider({
     children,
     media,
-}: Readonly<{ children: React.ReactNode; media: string }>) {
+    movieId,
+}: Readonly<{ children: React.ReactNode; media: string; movieId: string }>) {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<HLS | null>(null);
     const hideControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -239,6 +243,55 @@ export function VideoPlayerProvider({
             }
         }
     }, [media]);
+
+    // History Tracking
+    const { data: session } = useSession();
+    const lastSavedTimeRef = useRef<number>(0);
+
+    const saveProgress = async (currentTime: number, duration: number) => {
+        if (!session?.user?.id || !movieId) return;
+
+        try {
+            const historyRef = doc(db, "users", session.user.id, "history", movieId);
+            await setDoc(historyRef, {
+                movieId,
+                progress: Math.floor(currentTime),
+                duration: Math.floor(duration),
+                lastWatched: serverTimestamp(),
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error saving progress:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (!videoRef.current || !movieId || !session?.user?.id) return;
+        const video = videoRef.current;
+
+        const onTimeUpdate = () => {
+            const now = Date.now();
+            if (now - lastSavedTimeRef.current > 10000) { // 10s
+                if (video.currentTime > 0) {
+                    saveProgress(video.currentTime, video.duration);
+                    lastSavedTimeRef.current = now;
+                }
+            }
+        };
+
+        const onPause = () => {
+            if (video.currentTime > 0) {
+                saveProgress(video.currentTime, video.duration);
+            }
+        };
+
+        video.addEventListener("timeupdate", onTimeUpdate);
+        video.addEventListener("pause", onPause);
+
+        return () => {
+            video.removeEventListener("timeupdate", onTimeUpdate);
+            video.removeEventListener("pause", onPause);
+        };
+    }, [movieId, session?.user?.id]);
 
     // Stale State Managment
     const isLoadingRef = useRef(true);

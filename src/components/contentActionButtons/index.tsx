@@ -1,5 +1,5 @@
 import WatchAction from "./watchAction";
-import AddToWatchListAction from "./addToWatchListAction";
+import { WatchlistButton } from "@/components/watchlist-button";
 
 import "./common.css";
 
@@ -8,7 +8,8 @@ const ContentActionButtons: React.FC<{
     watchActionText: string;
     watchActionhref: string;
     className?: string;
-}> = ({ tabIndex, watchActionText, watchActionhref, className = "" }) => {
+    movieId: string;
+}> = ({ tabIndex, watchActionText, watchActionhref, className = "", movieId }) => {
     return (
         <div
             className={`relative flex justify-center gap-x-2.5 md:justify-start lg:gap-x-2.5 ${className}`}
@@ -19,7 +20,9 @@ const ContentActionButtons: React.FC<{
                 watchActionText={watchActionText}
             />
 
-            <AddToWatchListAction tabIndex={tabIndex} />
+            <div className="flex items-center">
+                <WatchlistButton movieId={movieId} variant="icon" className="app-transition-colors flex w-[50px] items-center justify-center border-2 border-[var(--pill-color)] bg-[var(--pill-color)] text-[var(--app-icon-primary)] hover:border-[var(--app-background-crunchyroll-orange)] hover:text-[var(--app-background-crunchyroll-orange)] h-[50px]" />
+            </div>
         </div>
     );
 };

@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Best Streaming Platform in Sri Lanka",
 };
 
+import { Providers } from "@/components/providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,10 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={GeistSans.className}>
-        <Preloader />
-        <div className="flex flex-col min-h-screen">
-          {children}
-        </div>
+        <Providers>
+          <Preloader />
+          <div className="flex flex-col min-h-screen">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

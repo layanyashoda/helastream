@@ -3,7 +3,7 @@
 @import "../../assets/styles/utilities.css";
 
 .header-container {
-    @apply fixed right-0 left-0 z-100 grid h-15 bg-[var(--app-background-secondary)];
+    @apply sticky top-0 right-0 left-0 z-100 grid h-15 bg-[var(--app-background-secondary)];
     grid-template-columns: auto 1fr auto;
 
     grid-template-areas: "menu logo actions";
@@ -45,7 +45,7 @@
 .icon-wrapper[data-active="true"],
 .icon-wrapper:hover,
 .icon-wrapper:focus-visible {
-    @apply bg-[var(--app-overlay-secondary)] text-white;
+    @apply text-white;
 }
 
 .header-menu {

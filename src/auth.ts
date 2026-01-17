@@ -33,7 +33,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         // Check password
                         if (userData.password) {
                             const passwordsMatch = await bcrypt.compare(password, userData.password);
+
                             if (passwordsMatch) {
+                                // Check if user is active
+                                if (userData.status === 'inactive') {
+                                    console.log(`Blocked login for inactive user: ${email}`);
+                                    return null;
+                                }
+
                                 return {
                                     id: userDoc.id,
                                     name: userData.name,

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, doc, setDoc } from "firebase/firestore";
@@ -28,6 +28,23 @@ export default function AddMoviePage() {
         year: new Date().getFullYear(),
         genre: "",
     });
+
+    const [genres, setGenres] = useState<{ id: string, name: string }[]>([]);
+
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const res = await fetch("/api/genres");
+                if (res.ok) {
+                    const data = await res.json();
+                    setGenres(data);
+                }
+            } catch (e) {
+                console.error("Failed to load genres", e);
+            }
+        };
+        fetchGenres();
+    }, []);
 
     const [files, setFiles] = useState<{
         video: File | null;
@@ -197,13 +214,13 @@ export default function AddMoviePage() {
                                         <SelectValue placeholder="Select Genre" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Action">Action</SelectItem>
-                                        <SelectItem value="Comedy">Comedy</SelectItem>
-                                        <SelectItem value="Drama">Drama</SelectItem>
-                                        <SelectItem value="Horror">Horror</SelectItem>
-                                        <SelectItem value="Sci-Fi">Sci-Fi</SelectItem>
-                                        <SelectItem value="Romance">Romance</SelectItem>
-                                        <SelectItem value="Animation">Animation</SelectItem>
+                                        {genres.length > 0 ? (
+                                            genres.map((g) => (
+                                                <SelectItem key={g.id} value={g.name}>{g.name}</SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem value="disabled" disabled>Loading genres...</SelectItem>
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
