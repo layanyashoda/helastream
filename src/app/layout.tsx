@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
+import Preloader from "@/components/ui/preloader"
 import "./globals.css";
 
 const lato = Lato({
@@ -23,7 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={lato.className}>
-        <div className="h-full min-w-xs">
+        <Preloader />
+        <div className="flex flex-col min-h-screen">
           {children}
         </div>
       </body>
