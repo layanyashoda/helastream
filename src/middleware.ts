@@ -28,6 +28,11 @@ export default auth((req) => {
         return;
     }
 
+    const isDiscoverRoute = nextUrl.pathname.startsWith("/discover");
+    if (isDiscoverRoute && !isLoggedIn) {
+        return NextResponse.redirect(new URL("/login", nextUrl));
+    }
+
     return;
 })
 

@@ -137,11 +137,18 @@ const Header = ({ user }: HeaderProps) => {
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             ) : (
-                                <Link href="/login" title="Login">
-                                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-[#141519] bg-[#fab818] hover:bg-[#ffc636] transition-colors uppercase tracking-wider h-10 clip-path-polygon">
-                                        Login
-                                    </button>
-                                </Link>
+                                <div className="flex items-center gap-3">
+                                    <Link href="/login" title="Login">
+                                        <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white hover:text-gray-300 transition-colors uppercase tracking-wider h-10">
+                                            Log In
+                                        </button>
+                                    </Link>
+                                    <Link href="/register" title="Sign Up">
+                                        <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-[#141519] bg-[#fab818] hover:bg-[#ffc636] transition-colors uppercase tracking-wider h-10 clip-path-polygon">
+                                            Sign Up
+                                        </button>
+                                    </Link>
+                                </div>
                             )}
                         </li>
                     </ul>
