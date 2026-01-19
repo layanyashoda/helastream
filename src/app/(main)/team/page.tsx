@@ -12,40 +12,46 @@ import { TiltCard } from "@/components/ui/tilt-card";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import img06 from "@/assets/members/06.jpeg";
+import img29 from "@/assets/members/29.jpeg";
+import img73 from "@/assets/members/73.jpeg";
+import img74 from "@/assets/members/74.jpeg";
+import img81 from "@/assets/members/81.jpeg";
+
 const TEAM_MEMBERS = [
     {
         name: "Chanuka Isuru",
         number: "06",
         role: "Head of Content",
-        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2670&auto=format&fit=crop",
+        image: img06.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Chamika Lakshan",
         number: "29",
         role: "Lead Designer",
-        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
+        image: img29.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Nethmi Pahasarani",
         number: "73",
         role: "Community Manager",
-        image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2574&auto=format&fit=crop",
+        image: img73.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Sanduni Bodhika",
         number: "74",
         role: "Head of Marketing",
-        image: "https://images.unsplash.com/photo-1598550874175-4d7112ee7519?q=80&w=2525&auto=format&fit=crop",
+        image: img74.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Layan Yasoda",
         number: "81",
         role: "Lead Developer",
-        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2574&auto=format&fit=crop",
+        image: img81.src,
         social: { github: "#", linkedin: "#" }
     }
 ];
