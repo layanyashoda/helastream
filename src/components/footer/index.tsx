@@ -34,7 +34,7 @@ const Footer = () => {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-white text-base font-bold mb-2">HelaStream</h3>
+                        <h3 className="text-white text-base font-bold mb-2">HelaTV+</h3>
                         <Link href="#" className="hover:text-white hover:underline transition-colors">About</Link>
                         <Link href="#" className="hover:text-white hover:underline transition-colors">Help/FAQ</Link>
                         <Link href="#" className="hover:text-white hover:underline transition-colors">Terms of Use</Link>
@@ -75,7 +75,7 @@ const Footer = () => {
                         <div className="transform scale-75 origin-right">
                             <HeaderLogoLarge />
                         </div>
-                        <p>&copy; HelaStream, LLC</p>
+                        <p>&copy; HelaTV+, LLC</p>
                         <div className="flex gap-2 text-xs">
                             <span>Sony Pictures</span>
                             <span>|</span>

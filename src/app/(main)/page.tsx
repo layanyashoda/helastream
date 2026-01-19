@@ -246,9 +246,9 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1" className="border-gray-800">
-              <AccordionTrigger className="text-lg hover:text-[#FF0000]">What is HelaStream?</AccordionTrigger>
+              <AccordionTrigger className="text-lg hover:text-[#FF0000]">What is HelaTV+?</AccordionTrigger>
               <AccordionContent className="text-gray-400">
-                HelaStream is a premium streaming service offering the largest collection of movies and TV shows.
+                HelaTV+ is a premium streaming service offering the largest collection of movies and TV shows.
                 We focus on high-definition content, offline viewing, and an ad-free experience.
               </AccordionContent>
             </AccordionItem>
@@ -269,7 +269,7 @@ export default function LandingPage() {
             <AccordionItem value="item-4" className="border-gray-800">
               <AccordionTrigger className="text-lg hover:text-[#FF0000]">Is there a free trial?</AccordionTrigger>
               <AccordionContent className="text-gray-400">
-                Absolutely. New members get a 14-day free trial to explore the full HelaStream library.
+                Absolutely. New members get a 14-day free trial to explore the full HelaTV+ library.
                 You won't be charged if you cancel before the trial ends.
               </AccordionContent>
             </AccordionItem>

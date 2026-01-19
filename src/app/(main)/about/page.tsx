@@ -85,7 +85,7 @@ export default function AboutPage() {
             <section className="py-24 bg-[#141519] border-t border-white/5">
                 <div className="container mx-auto px-6 max-w-5xl text-center">
                     <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-12">
-                        "We believe that great stories deserve a great platform. <span className="text-gray-500">HelaStream is built for the obsessed, the bingers, and the true fans of cinema.</span>"
+                        "We believe that great stories deserve a great platform. <span className="text-gray-500">HelaTV+ is built for the obsessed, the bingers, and the true fans of cinema.</span>"
                     </h2>
                 </div>
             </section>
@@ -156,7 +156,7 @@ export default function AboutPage() {
             <section className="py-24 bg-black relative overflow-hidden text-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#FF0000]/10 to-transparent pointer-events-none"></div>
                 <div className="container mx-auto px-6 relative z-10">
-                    <h2 className="text-4xl md:text-5xl font-black mb-8">Meet the Minds Behind HelaStream</h2>
+                    <h2 className="text-4xl md:text-5xl font-black mb-8">Meet the Minds Behind HelaTV+</h2>
                     <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
                         A passionate team of engineers, designers, and cinephiles working together to redefine entertainment.
                     </p>

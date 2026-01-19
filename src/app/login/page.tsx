@@ -23,7 +23,7 @@ export default function LoginPage() {
                 />
                 <div className="absolute bottom-10 left-10 z-20">
                     <h2 className="text-4xl font-bold text-white mb-2">Welcome back.</h2>
-                    <p className="text-gray-300 text-lg">Continue your streaming journey with HelaStream.</p>
+                    <p className="text-gray-300 text-lg">Continue your streaming journey with HelaTV+.</p>
                 </div>
             </div>
         </div>

@@ -96,7 +96,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                                     <Clapperboard className="size-4" />
                                 </div>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">HelaStream</span>
+                                    <span className="truncate font-semibold">HelaTV+</span>
                                     <span className="truncate text-xs">Admin Panel</span>
                                 </div>
                             </Link>

@@ -153,7 +153,7 @@ export default async function DiscoverPage() {
                     {recentMovies.length > 0 && (
                         <DataFeedRow
                             dataTitle="Recently Added"
-                            dataSubTitle="Fresh arrivals on HelaStream"
+                            dataSubTitle="Fresh arrivals on HelaTV+"
                             dataFeed={recentMovies}
                         />
                     )}
