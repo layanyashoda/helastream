@@ -72,7 +72,7 @@ export function VideoPlayer({ src, type = "application/x-mpegURL", movieId }: Vi
 
         } else {
             // Update player source
-            const currentSrc = player.current.src()
+            const currentSrc = (player.current as any).src()
             if (currentSrc !== src) {
                 player.current.src({ src, type })
             }

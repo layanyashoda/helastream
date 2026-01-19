@@ -33,3 +33,5 @@ export type Movie = {
     size?: number;
     uploadDate: string | Date;
 };
+
+export type VideoMetadata = Movie;
