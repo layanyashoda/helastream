@@ -22,13 +22,13 @@ const TEAM_MEMBERS = [
     {
         name: "Chanuka Isuru",
         number: "06",
-        role: "Head of Content",
+        role: "Backend Developer",
         image: img06.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Chamika Lakshan",
-        number: "29",
+        number: "Cloud Engineer",
         role: "Lead Designer",
         image: img29.src,
         social: { linkedin: "#", twitter: "#" }
@@ -36,21 +36,21 @@ const TEAM_MEMBERS = [
     {
         name: "Nethmi Pahasarani",
         number: "73",
-        role: "Community Manager",
+        role: "UI/UX Designer",
         image: img73.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Sanduni Bodhika",
         number: "74",
-        role: "Head of Marketing",
+        role: "System Engineer",
         image: img74.src,
         social: { linkedin: "#", twitter: "#" }
     },
     {
         name: "Layan Yasoda",
         number: "81",
-        role: "Lead Developer",
+        role: "Frontend Developer",
         image: img81.src,
         social: { github: "#", linkedin: "#" }
     }
