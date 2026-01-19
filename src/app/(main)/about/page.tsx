@@ -7,14 +7,29 @@ import { useRef } from "react";
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import headerBg from "@/assets/misc/5.jpg";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AboutPage() {
     const containerRef = useRef(null);
     const heroTextRef = useRef(null);
+    const heroBgRef = useRef(null);
 
     useGSAP(() => {
+        // Hero Parallax
+        gsap.to(heroBgRef.current, {
+            yPercent: 30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
         // Hero Fade-in
         gsap.from(heroTextRef.current, {
             y: 50,
@@ -58,11 +73,13 @@ export default function AboutPage() {
             {/* 1. Cinematic Hero Section */}
             <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
                 {/* Background Image with Overlay */}
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2525&auto=format&fit=crop"
+                <div ref={heroBgRef} className="absolute inset-0 z-0 scale-110">
+                    <Image
+                        src={headerBg}
                         alt="Cinema Background"
-                        className="w-full h-full object-cover opacity-60"
+                        fill
+                        className="object-cover opacity-60"
+                        priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#141519] via-[#141519]/40 to-black/60"></div>
                 </div>

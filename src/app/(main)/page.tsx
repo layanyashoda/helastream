@@ -24,6 +24,8 @@ import Mandara from "@/assets/dataFeed/mandara.jpg";
 import Modatharindu from "@/assets/dataFeed/modatharindu.jpg";
 import Rankevita from "@/assets/dataFeed/rankevita.jpg";
 import Thaala from "@/assets/dataFeed/thaala.jpg";
+import bgHero from "@/assets/misc/3.jpg";
+import bgBento from "@/assets/misc/2.jpg";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -108,10 +110,12 @@ export default function LandingPage() {
         {/* Background - Parallax */}
         <div ref={heroBgRef} className="absolute inset-0 z-0 opacity-40 scale-110">
           <div className="absolute inset-0 bg-gradient-to-t from-[#141519] via-[#141519]/50 to-black/60 z-10"></div>
-          <img
-            src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2670&auto=format&fit=crop"
+          <Image
+            src={bgHero}
             alt="Background"
-            className="w-full h-full object-cover grayscale"
+            fill
+            className="object-cover grayscale"
+            priority
           />
         </div>
 
@@ -151,7 +155,12 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
 
               {/* Removed Image */}
-              <div className="absolute inset-0 bg-[#0a0a0a] opacity-60"></div>
+              <Image
+                src={bgBento}
+                alt="Cinema Experience"
+                fill
+                className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+              />
 
               {/* Hover Glow */}
               <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] bg-[#FF0000] rounded-full blur-[100px] opacity-0 group-hover:opacity-20 transition-opacity duration-700"></div>

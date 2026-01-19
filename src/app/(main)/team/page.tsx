@@ -17,6 +17,8 @@ import img29 from "@/assets/members/29.jpeg";
 import img73 from "@/assets/members/73.jpeg";
 import img74 from "@/assets/members/74.jpeg";
 import img81 from "@/assets/members/81.jpeg";
+import headerBg from "@/assets/misc/4.jpg";
+import Image from "next/image";
 
 const TEAM_MEMBERS = [
     {
@@ -96,10 +98,12 @@ export default function TeamPage() {
             {/* 1. Cinematic Hero */}
             <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0 hero-bg-img should-animate">
-                    <img
-                        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop"
+                    <Image
+                        src={headerBg}
                         alt="Office Background"
-                        className="w-full h-full object-cover opacity-20 scale-110 grayscale"
+                        fill
+                        className="object-cover opacity-20 scale-110 grayscale"
+                        priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/90 via-[#0a0a0a]/60 to-[#0a0a0a]"></div>
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0a0a0a_100%)]"></div>
