@@ -28,8 +28,8 @@ const TEAM_MEMBERS = [
     },
     {
         name: "Chamika Lakshan",
-        number: "Cloud Engineer",
-        role: "Lead Designer",
+        number: "29",
+        role: "Cloud Engineer",
         image: img29.src,
         social: { linkedin: "#", twitter: "#" }
     },
