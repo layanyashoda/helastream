@@ -84,7 +84,7 @@ const VideoPlayer: React.FC<{ duration: number }> = ({ duration }) => {
                 </div>
 
                 {/* Bottom Control Bar */}
-                <div className="relative z-10 w-full bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-16 transition-opacity duration-300 focus-within:opacity-100">
+                <div className="relative z-10 w-full px-4 pb-4 pt-16 transition-opacity duration-300 focus-within:opacity-100">
                     {/* Seek Bar */}
                     <div
                         className="group/seek relative mb-4 flex h-4 cursor-pointer items-center touch-none"

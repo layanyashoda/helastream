@@ -77,7 +77,7 @@ const Footer = () => {
                         </div>
                         <p>&copy; HelaTV+, LLC</p>
                         <div className="flex gap-2 text-xs">
-                            <span>Sony Pictures</span>
+                            <span>HelaStream Pictures</span>
                             <span>|</span>
                             <span>Entertainment</span>
                         </div>
