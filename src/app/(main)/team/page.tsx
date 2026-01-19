@@ -4,7 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
-import { FaLinkedin, FaTwitter, FaGithub } from 'react-icons/fa';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { GradualBlur } from "@/components/ui/gradual-blur";
@@ -24,35 +24,35 @@ const TEAM_MEMBERS = [
         number: "06",
         role: "Backend Developer",
         image: img06.src,
-        social: { linkedin: "#", twitter: "#" }
+        social: { linkedin: "https://www.linkedin.com/in/chanuka-isuru-5030492b2/", github: "https://github.com/Chanukaisuru" }
     },
     {
         name: "Chamika Lakshan",
         number: "29",
         role: "Cloud Engineer",
         image: img29.src,
-        social: { linkedin: "#", twitter: "#" }
+        social: { linkedin: "https://www.linkedin.com/in/chamikalakshan/", github: "https://github.com/chamika2001" }
     },
     {
         name: "Nethmi Pahasarani",
         number: "73",
         role: "UI/UX Designer",
         image: img73.src,
-        social: { linkedin: "#", twitter: "#" }
+        social: { linkedin: "https://www.linkedin.com/in/nethmipahasarani/", github: "https://github.com/pahasarani" }
     },
     {
         name: "Sanduni Bodhika",
         number: "74",
         role: "System Engineer",
         image: img74.src,
-        social: { linkedin: "#", twitter: "#" }
+        social: { linkedin: "https://www.linkedin.com/in/bodhikadisanayaka/", github: "https://github.com/Bodhiii-74" }
     },
     {
         name: "Layan Yasoda",
         number: "81",
         role: "Frontend Developer",
         image: img81.src,
-        social: { github: "#", linkedin: "#" }
+        social: { linkedin: "https://www.linkedin.com/in/layanyasoda/", github: "https://github.com/layanyashoda" }
     }
 ];
 
@@ -151,7 +151,7 @@ export default function TeamPage() {
                                     <div className="absolute bottom-0 left-0 w-full p-8 md:p-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 translate-z-10">
                                         <div className="flex justify-between items-end mb-4 border-b border-white/10 pb-4">
                                             <div>
-                                                <div className="text-[#FF0000] font-mono text-xs tracking-widest mb-2 uppercase">
+                                                <div className="text-[#FF0000] font-mono text-sm font-bold tracking-widest mb-2 uppercase">
                                                     {member.role}
                                                 </div>
                                                 <h3 className="text-3xl font-bold text-white leading-none whitespace-pre-wrap">
@@ -160,7 +160,7 @@ export default function TeamPage() {
                                                     ))}
                                                 </h3>
                                             </div>
-                                            <span className="text-7xl font-black text-white/5 absolute top-8 right-8 group-hover:text-white/10 transition-colors duration-500 select-none transform translate-z-20">
+                                            <span className="text-7xl font-black text-white/20 absolute top-8 right-8 group-hover:text-white/40 transition-colors duration-500 select-none transform translate-z-20">
                                                 {member.number}
                                             </span>
                                         </div>
@@ -170,14 +170,10 @@ export default function TeamPage() {
                                             <span className="text-sm text-gray-400 font-medium">Connect:</span>
                                             <div className="flex gap-4">
                                                 {member.social.linkedin && (
-                                                    <a href={member.social.linkedin} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaLinkedin size={18} /></a>
+                                                    <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaLinkedin size={18} /></a>
                                                 )}
-                                                {member.social.twitter && (
-                                                    <a href={member.social.twitter} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaTwitter size={18} /></a>
-                                                )}
-                                                {/* @ts-ignore */}
                                                 {member.social.github && (
-                                                    <a href={member.social.github} className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaGithub size={18} /></a>
+                                                    <a href={member.social.github} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-[#FF0000] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10"><FaGithub size={18} /></a>
                                                 )}
                                             </div>
                                         </div>
