@@ -138,8 +138,7 @@ export default function AddMoviePage() {
                 thumbnailUrl: posterUrl, // Fallback to poster
                 posterUrl,
                 isFeatured,
-                titleImageUrl: isFeatured ? titleImageUrl : undefined,
-                bannerImageUrl: isFeatured ? bannerImageUrl : undefined,
+                ...(isFeatured ? { titleImageUrl: titleImageUrl, bannerImageUrl: bannerImageUrl } : {}),
                 filename: files.video.name,
                 size: files.video.size,
                 uploadDate: new Date().toISOString()
