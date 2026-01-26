@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 
 export function ScrollBlur() {
     const blurRef = useRef<HTMLDivElement>(null);
+    const pathname = usePathname();
+
+    // Hide on watch pages
+    const isWatchPage = pathname?.startsWith("/watch");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -33,6 +38,11 @@ export function ScrollBlur() {
 
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Don't render on watch pages
+    if (isWatchPage) {
+        return null;
+    }
 
     return (
         <div

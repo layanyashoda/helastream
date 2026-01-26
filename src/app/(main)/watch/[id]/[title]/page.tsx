@@ -12,6 +12,8 @@ import "./page.css";
 
 type PageProps = { params: Promise<{ id: string; title: string }> };
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(
     { params }: PageProps,
     parent: ResolvingMetadata,
@@ -21,7 +23,7 @@ export async function generateMetadata(
     const title = await getTitle(id);
 
     return {
-        title: `${title.seriesTitle} ${title.episodeTitle} - Watch on Crunchyroll`,
+        title: `${title.seriesTitle} ${title.episodeTitle} - Watch on HelaTV+`,
     };
 }
 
@@ -41,6 +43,7 @@ export default async function Watch({ params }: Readonly<PageProps>) {
                     <div className="w-full 2sm:pt-8 flex flex-col lg:flex-row gap-6 pt-6">
                         <div className="flex-1 min-w-0">
                             <MediaDetails
+                                movieId={id}
                                 seriesId={series.id}
                                 seriesTitle={series.title}
                                 averageRating={series.averageRating}

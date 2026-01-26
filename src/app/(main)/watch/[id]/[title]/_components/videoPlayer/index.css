@@ -4,6 +4,7 @@
 
 .video-player {
     grid-template-areas: "video-player";
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .video-player>* {
@@ -26,4 +27,66 @@
     .settings-panel-sizer {
         max-height: calc(100vh - 15.625rem);
     }
+}
+
+/* Fullscreen Animation Styles */
+.video-player video {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 0.3s ease;
+}
+
+/* Before entering fullscreen - scale up effect */
+.video-player.entering-fullscreen video {
+    animation: scaleUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Exiting fullscreen - scale down effect */
+.video-player.exiting-fullscreen video {
+    animation: scaleDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(1);
+        border-radius: 0.5rem;
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+        border-radius: 0;
+    }
+}
+
+@keyframes scaleDown {
+    0% {
+        transform: scale(1);
+        border-radius: 0;
+    }
+
+    50% {
+        transform: scale(0.98);
+    }
+
+    100% {
+        transform: scale(1);
+        border-radius: 0.5rem;
+    }
+}
+
+/* Fullscreen state */
+:fullscreen .video-player {
+    background: black;
+}
+
+:fullscreen .video-player video {
+    border-radius: 0;
+}
+
+/* Controls fade animation */
+.controls {
+    transition: opacity 0.3s ease;
 }

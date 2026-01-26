@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import videojs from "video.js"
 import "video.js/dist/video-js.css"
 import type Player from "video.js/dist/types/player"
@@ -7,6 +7,10 @@ import type Player from "video.js/dist/types/player"
 import { useSession } from "next-auth/react"
 import { doc, setDoc, serverTimestamp } from "firebase/firestore"
 import { db } from "@/lib/firebase"
+
+import "videojs-contrib-quality-levels"
+import "videojs-hls-quality-selector"
+import "videojs-hls-quality-selector/dist/videojs-hls-quality-selector.css"
 
 interface VideoPlayerProps {
     src: string
@@ -49,7 +53,7 @@ export function VideoPlayer({ src, type = "application/x-mpegURL", movieId }: Vi
                 }]
             })
 
-            // Add event listeners
+            // Add event listeners (rest of code)
             player.current.on('timeupdate', () => {
                 const now = Date.now()
                 if (now - lastSavedTime.current > 10000) { // Save every 10s
@@ -85,7 +89,6 @@ export function VideoPlayer({ src, type = "application/x-mpegURL", movieId }: Vi
                 const duration = player.current.duration() || 0
                 if (currentTime > 0 && session?.user?.id && movieId) {
                     // We can't await here effectively, but we try fire-and-forget
-                    // Note: fetch/sendBeacon is better for unmount, but this is a simple attempt
                     const historyRef = doc(db, "users", session.user.id, "history", movieId)
                     setDoc(historyRef, {
                         movieId,

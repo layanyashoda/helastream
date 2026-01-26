@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import Preloader from "@/components/ui/preloader"
+import { PerformanceMetrics } from "@/components/dev/performance-metrics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={GeistSans.className}>
         <Providers>
           <Preloader />
+          <PerformanceMetrics />
           <div className="flex flex-col min-h-screen">
             {children}
           </div>

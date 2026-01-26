@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,6 +106,21 @@ export default function AddMoviePage() {
             const docRef = doc(collection(db, "videos"));
             const movieId = docRef.id;
 
+            // 2. Create Initial Document to prevent Race Condition with Cloud Function
+            // The Cloud Function triggers immediately after video upload and expects the doc to exist.
+            const initialMovieData: any = {
+                title: formData.title,
+                description: formData.description,
+                year: Number(formData.year),
+                genre: formData.genre,
+                status: "Uploading",
+                uploadDate: new Date().toISOString(),
+                isFeatured: isFeatured,
+                createdAt: serverTimestamp(),
+            };
+
+            await setDoc(docRef, initialMovieData);
+
             // Upload Video to 'videos/{movieId}/...'
             setStatusMessage("Uploading video file...");
             // This will result in: videos/{movieId}/{timestamp}_{filename}
@@ -126,26 +141,24 @@ export default function AddMoviePage() {
                 bannerImageUrl = await uploadFile(files.bannerImage!, "images");
             }
 
-            // Save Metadata
+            // Save Metadata (Update with URLs)
             setStatusMessage("Saving movie details...");
-            const movieData: Omit<Movie, "id"> = {
-                title: formData.title,
-                description: formData.description,
-                year: Number(formData.year),
-                genre: formData.genre,
-                status: "Ready", // Set default status to Ready since we don't have a transcoding backend yet
+
+            const updates: any = {
                 videoUrl, // This will be the RAW mp4 url initially. Cloud function will update it to HLS later.
                 thumbnailUrl: posterUrl, // Fallback to poster
                 posterUrl,
-                isFeatured,
-                ...(isFeatured ? { titleImageUrl: titleImageUrl, bannerImageUrl: bannerImageUrl } : {}),
                 filename: files.video.name,
                 size: files.video.size,
-                uploadDate: new Date().toISOString()
             };
 
-            // Use setDoc with the generated reference
-            await setDoc(docRef, movieData);
+            if (isFeatured) {
+                updates.titleImageUrl = titleImageUrl;
+                updates.bannerImageUrl = bannerImageUrl;
+            }
+
+            // Update the existing doc
+            await updateDoc(docRef, updates);
 
             setStatusMessage("Done!");
             router.push("/admin/movies");

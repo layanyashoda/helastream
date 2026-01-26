@@ -16,6 +16,7 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 import { Context, MediaSettingsPanel } from "./index.types";
+import { useSettingsSafe } from "@/providers/settings";
 
 const VideoPlayerContext = createContext<Context | undefined>(undefined);
 
@@ -32,6 +33,9 @@ export function VideoPlayerProvider({
     media,
     movieId,
 }: Readonly<{ children: React.ReactNode; media: string; movieId: string }>) {
+    // Developer settings
+    const { settings: devSettings } = useSettingsSafe();
+
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const hlsRef = useRef<HLS | null>(null);
     const hideControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -422,8 +426,22 @@ export function VideoPlayerProvider({
         const video = videoRef.current;
         if (!video) return;
 
-        if (!document.fullscreenElement) video.requestFullscreen?.();
-        else document.exitFullscreen?.();
+        // Get the video player container for animation
+        const container = video.closest('.video-player');
+
+        if (!document.fullscreenElement) {
+            // Add entering animation class
+            container?.classList.add('entering-fullscreen');
+            video.requestFullscreen?.().then(() => {
+                setTimeout(() => container?.classList.remove('entering-fullscreen'), 300);
+            });
+        } else {
+            // Add exiting animation class
+            container?.classList.add('exiting-fullscreen');
+            document.exitFullscreen?.().then(() => {
+                setTimeout(() => container?.classList.remove('exiting-fullscreen'), 300);
+            });
+        }
     }
 
     function switchAudioTrack(trackId: number) {
@@ -547,6 +565,23 @@ export function VideoPlayerProvider({
                         className="video absolute aspect-video size-full"
                         controls={isMediaFullscreen}
                     />
+
+                    {/* HLS Debug Overlay - Controlled by Developer Settings */}
+                    {devSettings.hlsDebugOverlay && (
+                        <div className="absolute top-4 left-4 bg-black/80 text-white text-xs p-3 rounded-lg pointer-events-none z-[100] max-w-xs font-mono">
+                            <div className="flex items-center gap-2 mb-2 border-b border-white/20 pb-2">
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <strong>HLS DEBUG</strong>
+                            </div>
+                            <div className="space-y-1">
+                                <div>Quality Levels: <span className="text-green-400">{qualityLevels.length}</span></div>
+                                <div>Current: <span className="text-yellow-400">{currentLevel}p</span></div>
+                                <div>Selected: <span className="text-blue-400">{selectedQuality === -1 ? "Auto" : `${qualityLevels.find(q => q.id === selectedQuality)?.height}p`}</span></div>
+                                <div>Type: <span className="text-purple-400">{media?.includes(".m3u8") ? "HLS" : "MP4"}</span></div>
+                                <div className="text-[10px] text-white/50 mt-2 truncate">Source: {media || "None"}</div>
+                            </div>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="absolute inset-0 flex items-center justify-center bg-black/80 text-white z-50">

@@ -6,20 +6,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Code } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Settings {
     maintenanceMode: boolean;
     announcementEnabled: boolean;
     announcementMessage: string;
+    // Developer Options
+    hlsDebugOverlay: boolean;
+    showPerformanceMetrics: boolean;
+    verboseLogging: boolean;
+    disableAnalytics: boolean;
 }
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<Settings>({
         maintenanceMode: false,
         announcementEnabled: false,
-        announcementMessage: ""
+        announcementMessage: "",
+        hlsDebugOverlay: false,
+        showPerformanceMetrics: false,
+        verboseLogging: false,
+        disableAnalytics: false,
     });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +43,11 @@ export default function SettingsPage() {
                     setSettings({
                         maintenanceMode: data.maintenanceMode || false,
                         announcementEnabled: data.announcementEnabled || false,
-                        announcementMessage: data.announcementMessage || ""
+                        announcementMessage: data.announcementMessage || "",
+                        hlsDebugOverlay: data.hlsDebugOverlay || false,
+                        showPerformanceMetrics: data.showPerformanceMetrics || false,
+                        verboseLogging: data.verboseLogging || false,
+                        disableAnalytics: data.disableAnalytics || false,
                     });
                 }
             } catch (e) {
@@ -126,6 +139,76 @@ export default function SettingsPage() {
                                 />
                             </div>
                         )}
+                    </div>
+
+                </CardContent>
+            </Card>
+
+            {/* Developer Options */}
+            <Card className="bg-[#141519] border-[#23252b]">
+                <CardHeader>
+                    <div className="flex items-center gap-2">
+                        <Code className="h-5 w-5 text-muted-foreground" />
+                        <CardTitle>Developer Options</CardTitle>
+                    </div>
+                    <CardDescription>Debug and development settings. Use with caution.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+
+                    {/* HLS Debug Overlay */}
+                    <div className="flex items-center justify-between p-4 border rounded-lg border-[#23252b]">
+                        <div className="space-y-0.5">
+                            <Label className="text-base">HLS Debug Overlay</Label>
+                            <p className="text-sm text-muted-foreground">
+                                Show HLS quality levels and source info on video player.
+                            </p>
+                        </div>
+                        <Switch
+                            checked={settings.hlsDebugOverlay}
+                            onCheckedChange={(v) => setSettings(prev => ({ ...prev, hlsDebugOverlay: v }))}
+                        />
+                    </div>
+
+                    {/* Performance Metrics */}
+                    <div className="flex items-center justify-between p-4 border rounded-lg border-[#23252b]">
+                        <div className="space-y-0.5">
+                            <Label className="text-base">Performance Metrics</Label>
+                            <p className="text-sm text-muted-foreground">
+                                Display page load times and API response metrics.
+                            </p>
+                        </div>
+                        <Switch
+                            checked={settings.showPerformanceMetrics}
+                            onCheckedChange={(v) => setSettings(prev => ({ ...prev, showPerformanceMetrics: v }))}
+                        />
+                    </div>
+
+                    {/* Verbose Logging */}
+                    <div className="flex items-center justify-between p-4 border rounded-lg border-[#23252b]">
+                        <div className="space-y-0.5">
+                            <Label className="text-base">Verbose Logging</Label>
+                            <p className="text-sm text-muted-foreground">
+                                Enable detailed console logs for debugging.
+                            </p>
+                        </div>
+                        <Switch
+                            checked={settings.verboseLogging}
+                            onCheckedChange={(v) => setSettings(prev => ({ ...prev, verboseLogging: v }))}
+                        />
+                    </div>
+
+                    {/* Disable Analytics */}
+                    <div className="flex items-center justify-between p-4 border rounded-lg border-[#23252b]">
+                        <div className="space-y-0.5">
+                            <Label className="text-base">Disable Analytics</Label>
+                            <p className="text-sm text-muted-foreground">
+                                Stop sending usage data for testing purposes.
+                            </p>
+                        </div>
+                        <Switch
+                            checked={settings.disableAnalytics}
+                            onCheckedChange={(v) => setSettings(prev => ({ ...prev, disableAnalytics: v }))}
+                        />
                     </div>
 
                 </CardContent>

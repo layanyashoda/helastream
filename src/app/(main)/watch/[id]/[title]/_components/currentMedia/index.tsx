@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
 import { cleanString, getCompactNotation, getReadableDate } from "@/lib/utils";
 
 import AverageRating from "@/components/ratings/averageRating";
+import { WatchlistButton } from "@/components/watchlist-button";
 import Details from "../details";
 
 import {
@@ -19,6 +22,7 @@ import {
 import "./index.css";
 
 const CurrentMedia: React.FC<{
+    movieId: string;
     seriesId: string;
     seriesTitle: string;
     averageRating: number;
@@ -31,6 +35,7 @@ const CurrentMedia: React.FC<{
     description: string;
     details: Record<string, string>;
 }> = ({
+    movieId,
     seriesId,
     seriesTitle,
     averageRating,
@@ -107,13 +112,7 @@ const CurrentMedia: React.FC<{
                                 <span className="text-sm font-medium">Dislike</span>
                             </button>
 
-                            <button className="flex items-center gap-2 text-[var(--app-background-crunchyroll-orange)] hover:text-[#ff8540] transition-colors">
-                                <div className="current-media-action-button">
-                                    <AddToWatchListOutlined />
-                                    <AddToWatchListFilled />
-                                </div>
-                                <span className="text-sm font-semibold uppercase">Watchlist</span>
-                            </button>
+                            <WatchlistButton movieId={movieId} />
                         </div>
 
                         {/* Share could go here */}
